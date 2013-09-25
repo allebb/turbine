@@ -3,6 +3,12 @@
 class OverviewController extends BaseController
 {
 
+    function __construct()
+    {
+        $this->beforeFilter('auth.basic');
+        $this->beforeFilter('csrf', array('on' => 'store'));
+    }
+
     public function index()
     {
         return View::make('overview')

@@ -3,6 +3,12 @@
 class RulesController extends \BaseController
 {
 
+    function __construct()
+    {
+        $this->beforeFilter('auth.basic');
+        $this->beforeFilter('csrf', array('on' => 'store'));
+    }
+
     /**
      * Display a listing of the resource.
      *
