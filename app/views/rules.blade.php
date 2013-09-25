@@ -1,51 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <link rel="shortcut icon" href="../../assets/ico/favicon.png">
-        <title>Site and Applications - Turbine (v.1.2)</title>
-        <!-- Bootstrap core CSS -->
-        <link href="css/bootstrap.css" rel="stylesheet">
-        <!-- Bootstrap theme -->
-        <link href="css/bootstrap-theme.min.css" rel="stylesheet">
-
-        <!-- Custom styles for this template -->
-        <link href="css/theme.css" rel="stylesheet">
-
-        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-          <script src="js/html5shiv.js"></script>
-          <script src="js/respond.min.js"></script>
-        <![endif]-->
-    </head>
-
+    @include('includes/head')
     <body>
-        <!-- Fixed navbar -->
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Turbine</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="#">Overview</a></li>
-                        <li  class="active"><a href="#servers">Sites &amp; Servers</a></li>
-                        <li><a href="#contact">Settings</a></li>
-                        <li><a href="#contact">Logout</a></li>
-                    </ul>
-                </div><!--/.nav-collapse -->
-            </div>
-        </div>
+        @include('includes/navbar')
 
+        <!-- Start of content -->
         <div class="container theme-showcase">
 
             <div class="page-header">
@@ -86,12 +45,9 @@
             <tr><td>www.bassrocket.com</td><td><span class="glyphicon glyphicon-ok"></span></td><td>172.25.87.3 [8081]</td><td></td><td><a href="#edit" class="btn btn-xs btn-default">Edit</a> <a href="#delete" class="btn btn-xs btn-danger">Delete</a</td></tr>
             <tr><td>api.bassrocket.com</td><td><span class="glyphicon glyphicon-ok"></span></td><td>172.25.87.9 [8081]</td><td></td><td><a href="#edit" class="btn btn-xs btn-default">Edit</a> <a href="#delete" class="btn btn-xs btn-danger">Delete</a></td></tr>
         </table>
-    </div> <!-- /container -->
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/holder.js"></script>
+    </div>
+    <!-- End content -->
+
+    @include('includes/footer')
 </body>
 </html>

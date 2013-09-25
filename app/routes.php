@@ -1,17 +1,13 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the Closure to execute when that URI is requested.
-|
-*/
+// This 'view composers' will be moved into their own include file eventually but for speed I'm just added them here for now!
+View::composer('*', function($view) {
+            if (Auth::user()) {
+                $view->with('useraccount', $useraccount = \User::with('person')->find(\Auth::user()->id));
+            }
+        });
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
+
+
+Route::resource('/', 'OverviewController', array('only' => array('index')));
+Route::resource('rules', 'RulesController');
