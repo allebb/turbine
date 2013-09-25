@@ -8,6 +8,10 @@ View::composer('*', function($view) {
         });
 
 
-
+// Application routes
 Route::resource('/', 'OverviewController', array('only' => array('index')));
 Route::resource('rules', 'RulesController');
+Route::resource('settings', 'SettingsController', array('only' => array('index')));
+Route::get('logout', function() {
+            return Auth::logout();
+        });
