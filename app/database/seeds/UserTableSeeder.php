@@ -8,6 +8,7 @@ class UserTableSeeder extends Illuminate\Database\Seeder
         $adminuser = new User(array(
             'username' => 'admin',
             'password' => Hash::make('password'),
+            'email' => 'root@localhost',
         ));
         $adminuser->save();
     }

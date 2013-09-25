@@ -25,7 +25,7 @@
                 @else
                 <li><a href="{{ URL::route('settings.index') }}">Settings</a></li>
                 @endif
-                <li><a href="#contact">Logout</a></li>
+                <li><a href="{{ URL::route('logout') }}">Logout</a></li>
             </ul>
         </div>
     </div>

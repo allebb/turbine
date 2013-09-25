@@ -16,12 +16,15 @@ class Initialschema extends Migration
                     $table->increments('id');
                     $table->string('username')->unique();
                     $table->string('password');
+                    $table->string('email');
+                    $table->timestamps();
                 });
 
         Schema::create('settings', function($table) {
                     $table->string('name')->unique();
                     $table->text('value');
                     $table->primary('name');
+                    $table->timestamps();
                 });
     }
 
