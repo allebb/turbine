@@ -4,7 +4,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" href="../../assets/ico/favicon.png">
-    <title>{{{ $title }}} - Turbine (v.1.2)</title>
+    <title>{{{ $title }}} - Turbine (v.{{{ $turbineversion }}})</title>
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-theme.min.css" rel="stylesheet">
     <link href="css/theme.css" rel="stylesheet">
