@@ -1,5 +1,8 @@
 <?php
 
+use \Rule;
+use \Input;
+
 class RulesController extends \BaseController
 {
 
@@ -24,7 +27,14 @@ class RulesController extends \BaseController
 
     public function store()
     {
-        die("Form will be saved here!");
+        $create_rule = new Rule;
+        $create_rule->hostheader = strtolower(Input::get('origin_address'));
+        //$create_rule->target_address = strtolower(Input::get('target_address')); // This will go directly into the nginx config file(s)
+        $create_rule->enabled = Input::get('enabled');
+        $create_rule->nlb = false;
+        $create_rule->save();
+        return Redirect::back()
+                        ->with('flash_success', 'New rule for ' . $create_rule->hostheader . ' has been added successfully!');
     }
 
     /**
@@ -32,7 +42,10 @@ class RulesController extends \BaseController
      */
     public function edit($id)
     {
-        die("Editing form for: " . $id);
+        $rule = Rule::find($id);
+        return View::make('rules.edit')
+                        ->with('title', 'Rules') // Customise the HTML page title per controller 'action'.
+                        ->with('record', $rule);
     }
 
     /**
@@ -40,7 +53,14 @@ class RulesController extends \BaseController
      */
     public function update($id)
     {
-        die("We just saved the data for rule set: " . $id);
+        $update_rule = Rule::find($id);
+        $update_rule->hostheader = strtolower(Input::get('origin_address'));
+        //$create_rule->target_address = strtolower(Input::get('target_address')); // This will go directly into the nginx config file(s)
+        $update_rule->enabled = Input::get('enabled');
+        //$update_rule->nlb = false;
+        $update_rule->save();
+        return Redirect::back()
+                        ->with('flash_info', 'New rule for ' . $update_rule->hostheader . ' has been updated successfully!');
     }
 
 }

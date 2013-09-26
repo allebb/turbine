@@ -13,23 +13,23 @@
             @include('includes/flashmsgs')
 
             <h2>Create new rule</h2>
-            <form role="form" action="{{ URL::route('rules.store') }}" method="POST">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Origin address (Host header)</label>
-                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="eg. www.mydomain.com or *.mydomain.com">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Target server</label>
-                    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="eg. 192.168.0.12 or web1.internal.local:8080">
-                    <p class="help-block">You can add multiple target servers (a network load-balanced set-up) after you create this initial rule using the 'edit' button below.</p>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" checked="checked"> Enabled
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-default">Create rule</button>
-            </form>
+            {{ Form::open(array('route' => 'rules.store', 'action' => 'POST', 'role' => 'form')) }}
+            <div class="form-group">
+                <label for="origin_address">Origin address (Host header)</label>
+                <input type="text" class="form-control" name="origin_address" id="origin_address" placeholder="eg. www.mydomain.com or *.mydomain.com">
+            </div>
+            <div class="form-group">
+                <label for="target_address">Target server</label>
+                <input type="text" class="form-control" name="target_address" id="target_address" placeholder="eg. 192.168.0.12 or web1.internal.local:8080">
+                <p class="help-block">You can add multiple target servers (a network load-balanced set-up) after you create this initial rule using the 'edit' button below.</p>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input name="enabled" id="enabled" type="checkbox" checked="checked"> Enabled
+                </label>
+            </div>
+            {{ Form::submit('Create rule', array('class' => 'btn btn-default')) }}
+            {{ Form::close() }}
         </form>
         <p>&nbsp;</p>
         <h2>Existing rules</h2>
