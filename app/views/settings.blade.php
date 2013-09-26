@@ -10,16 +10,9 @@
             <div class="page-header">
                 <h1>Settings</h1>
             </div>
-
-            <!-- ALERTS --
-            <div class="alert alert-success">...</div>
-            <div class="alert alert-info">...</div>
-            <div class="alert alert-warning">...</div>
-            <div class="alert alert-danger">...</div>
-            -->
+            @include('includes/flashmsgs')
 
             <form role="form">
-                <!--  We iterate over all of the system settings and output the available options to edit etc. -->
                 @foreach($settings as $setting)
                 <div class="form-group">
                     <label for="{{ $setting->name }}">{{{ $setting->friendlyname }}}</label>

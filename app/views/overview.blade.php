@@ -3,7 +3,7 @@
     @include('includes/head')
     <body>
         @include('includes/navbar', array('title' => $title))
-
+        @include('includes/flashmsgs')
         <!-- Start of content -->
         <div class="container theme-showcase">
             <div class="jumbotron">

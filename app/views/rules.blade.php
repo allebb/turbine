@@ -8,15 +8,9 @@
         <div class="container theme-showcase">
 
             <div class="page-header">
-                <h1>Sites &amp; Applications</h1>
+                <h1>Rules</h1>
             </div>
-
-            <!-- ALERTS --
-            <div class="alert alert-success">...</div>
-<div class="alert alert-info">...</div>
-<div class="alert alert-warning">...</div>
-<div class="alert alert-danger">...</div>
-            -->
+            @include('includes/flashmsgs')
 
             <h2>Create new rule</h2>
             <form role="form" action="{{ URL::route('rules.store') }}" method="POST">
