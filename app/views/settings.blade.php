@@ -19,20 +19,15 @@
             -->
 
             <form role="form">
+                <!--  We iterate over all of the system settings and output the available options to edit etc. -->
+                @foreach($settings as $setting)
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Origin address (Host header)</label>
-                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="eg. www.mydomain.com or *.mydomain.com">
+                    <label for="{{ $setting->name }}">{{{ $setting->friendlyname }}}</label>
+                    <input type="text" class="form-control" id="{{ $setting->name }}" placeholder="eg. www.mydomain.com or *.mydomain.com"@if($setting->svalue) value="{{{ $setting->svalue }}}"@endif>
+                    <p class="help-block">{{{ $setting->description }}}</p>
                 </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Target server</label>
-                    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="eg. 192.168.0.12 or web1.internal.local">
-                    <p class="help-block">You can add multiple target servers (a network load-balanced set-up) after you create this initial rule.</p>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox"> Enabled
-                    </label>
-                </div>
+                @endforeach
+                <!-- End of options -->
                 <button type="submit" class="btn btn-default">Save changes</button>
             </form>
         </form>
