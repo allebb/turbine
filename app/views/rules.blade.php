@@ -39,12 +39,18 @@
         </form>
         <p>&nbsp;</p>
         <h2>Existing rules</h2>
+        @if($rules->count()>0)
         <table class="table table-hover">
             <tr><th>Host header</th><th>Enabled</th><th>Target(s)</th><th>Load-balanced</th><th></th></tr>
-            <tr><td>*.bobbyallen.me</td><td></td><td>172.25.87.2 [80]<br>172.25.87.5 [80]</td><td><span class="glyphicon glyphicon-ok"></span></td><td><a href="{{{ URL::route('rules.edit', 4) }}}" class="btn btn-xs btn-default">Edit</a></td></tr>
-            <tr><td>www.bassrocket.com</td><td><span class="glyphicon glyphicon-ok"></span></td><td>172.25.87.3 [8081]</td><td></td><td><a href="#edit" class="btn btn-xs btn-default">Edit</a></tr>
-            <tr><td>api.bassrocket.com</td><td><span class="glyphicon glyphicon-ok"></span></td><td>172.25.87.9 [8081]</td><td></td><td><a href="#edit" class="btn btn-xs btn-default">Edit</a></td></tr>
+            @foreach($rules as $rule)
+            <tr><td>{{{ $rule->hostheader }}}</td><td>@if($rule->enabled)<span class="glyphicon glyphicon-ok"></span>@endif</td><td>To be loaded from file!</td><td>@if($rule->nlb)<span class="glyphicon glyphicon-ok"></span>@endif</td><td><a href="{{{ URL::route('rules.edit', $rule->id) }}}" class="btn btn-xs btn-default">Edit</a></td></tr>
+            @endforeach
         </table>
+        @else
+        <p>&nbsp;</p>
+        <p>There are currently no rules configured on this appliance!</p>
+        <p>&nbsp;</p>
+        @endif
     </div>
     <!-- End content -->
 

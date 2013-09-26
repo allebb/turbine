@@ -16,8 +16,10 @@ class RulesController extends \BaseController
      */
     public function index()
     {
+        $rules = Rule::all();
         return View::make('rules')
-                        ->with('title', 'Rules'); // Customise the HTML page title per controller 'action'.
+                        ->with('title', 'Rules') // Customise the HTML page title per controller 'action'.
+                        ->with('rules', $rules);
     }
 
     public function store()
