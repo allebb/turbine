@@ -1,5 +1,8 @@
 <?php
 
+use \Setting;
+use \Input;
+
 class SettingsController extends \BaseController
 {
 
@@ -30,7 +33,14 @@ class SettingsController extends \BaseController
      */
     public function store()
     {
-        //
+        $fields = Input::except('_token');
+        foreach ($fields as $setting => $value) {
+            $data = Setting::where('name', $setting)->first();
+            $data->svalue = $value;
+            $data->save();
+        }
+        return Redirect::back()
+                        ->with('flash_info', 'Application settings have been updated successfully!');
     }
 
 }

@@ -36,9 +36,9 @@ class Setting extends \Eloquent
      */
     public static function updateSetting($name, $value)
     {
-        $data = $data = self::where('name', $gname)->first();
+        $data = Setting::where('name', $name)->first();
         $data->svalue = $value;
-        return $data->save();
+        $data->save();
     }
 
 }

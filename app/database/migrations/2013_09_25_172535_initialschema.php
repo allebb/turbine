@@ -21,12 +21,12 @@ class Initialschema extends Migration
                 });
 
         Schema::create('settings', function($table) {
+                    $table->increments('id'); // Tables must have this column if using Eloquent to update them!
                     $table->string('name')->unique();
                     $table->text('svalue');
                     $table->string('friendlyname'); // A friendly setting name eg. 'Software Version'
                     $table->text('description'); // We'll use this to set friend user infomation. eg. 'This setting contains the current version of the Turbine software'.
                     $table->boolean('usersetting')->default(true); // Allow the user to edit via. the 'Settings' screen?
-                    $table->primary('name');
                     $table->timestamps();
                 });
 
