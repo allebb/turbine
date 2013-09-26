@@ -1082,6 +1082,7 @@ return array(
     'Psr\\Log\\NullLogger' => $vendorDir . '/psr/log/Psr/Log/NullLogger.php',
     'Rule' => $baseDir . '/app/models/Rule.php',
     'RulesController' => $baseDir . '/app/controllers/RulesController.php',
+    'RulesTableSeeder' => $baseDir . '/app/database/seeds/RulesTableSeeder.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',
     'Setting' => $baseDir . '/app/models/Setting.php',
     'SettingsController' => $baseDir . '/app/controllers/SettingsController.php',
