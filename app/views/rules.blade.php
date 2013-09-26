@@ -12,6 +12,19 @@
             </div>
             @include('includes/flashmsgs')
 
+            <h2>Existing rules</h2>
+            @if($rules->count()>0)
+            <table class="table table-hover">
+                <tr><th>Host header</th><th>Enabled</th><th>Target(s)</th><th>Load-balanced</th><th></th></tr>
+                @foreach($rules as $rule)
+                <tr><td>{{{ $rule->hostheader }}}</td><td>@if($rule->enabled)<span class="glyphicon glyphicon-ok"></span>@endif</td><td>To be loaded from file!</td><td>@if($rule->nlb)<span class="glyphicon glyphicon-ok"></span>@endif</td><td><a href="{{{ URL::route('rules.edit', $rule->id) }}}" class="btn btn-xs btn-default">Edit</a></td></tr>
+                @endforeach
+            </table>
+            @else
+            <p>&nbsp;</p>
+            <p>There are currently no rules configured on this appliance!</p>
+            <p>&nbsp;</p>
+            @endif
             <h2>Create new rule</h2>
             {{ Form::open(array('route' => 'rules.store', 'action' => 'POST', 'role' => 'form')) }}
             <div class="form-group">
@@ -32,19 +45,7 @@
             {{ Form::close() }}
         </form>
         <p>&nbsp;</p>
-        <h2>Existing rules</h2>
-        @if($rules->count()>0)
-        <table class="table table-hover">
-            <tr><th>Host header</th><th>Enabled</th><th>Target(s)</th><th>Load-balanced</th><th></th></tr>
-            @foreach($rules as $rule)
-            <tr><td>{{{ $rule->hostheader }}}</td><td>@if($rule->enabled)<span class="glyphicon glyphicon-ok"></span>@endif</td><td>To be loaded from file!</td><td>@if($rule->nlb)<span class="glyphicon glyphicon-ok"></span>@endif</td><td><a href="{{{ URL::route('rules.edit', $rule->id) }}}" class="btn btn-xs btn-default">Edit</a></td></tr>
-            @endforeach
-        </table>
-        @else
-        <p>&nbsp;</p>
-        <p>There are currently no rules configured on this appliance!</p>
-        <p>&nbsp;</p>
-        @endif
+        @include('includes/copyright')
     </div>
     <!-- End content -->
 

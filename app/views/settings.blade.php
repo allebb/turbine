@@ -23,6 +23,8 @@
             {{ Form::submit('Save changes', array('class' => 'btn btn-default')) }}
             {{ Form::close() }}
         </form>
+        <p>&nbsp;</p>
+        @include('includes/copyright')
     </div>
     <!-- End content -->
 
