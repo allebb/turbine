@@ -19,7 +19,7 @@
             -->
 
             <h2>Create new rule</h2>
-            <form role="form">
+            <form role="form" action="{{ URL::route('rules.store') }}" method="POST">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Origin address (Host header)</label>
                     <input type="text" class="form-control" id="exampleInputEmail1" placeholder="eg. www.mydomain.com or *.mydomain.com">
@@ -41,9 +41,9 @@
         <h2>Existing rules</h2>
         <table class="table table-hover">
             <tr><th>Host header</th><th>Enabled</th><th>Target(s)</th><th>Load-balanced</th><th></th></tr>
-            <tr><td>*.bobbyallen.me</td><td></td><td>172.25.87.2 [80]<br>172.25.87.5 [80]</td><td><span class="glyphicon glyphicon-ok"></span></td><td><a href="#edit" class="btn btn-xs btn-default">Edit</a> <a href="#delete" class="btn btn-xs btn-danger">Delete</a</td></tr>
-            <tr><td>www.bassrocket.com</td><td><span class="glyphicon glyphicon-ok"></span></td><td>172.25.87.3 [8081]</td><td></td><td><a href="#edit" class="btn btn-xs btn-default">Edit</a> <a href="#delete" class="btn btn-xs btn-danger">Delete</a</td></tr>
-            <tr><td>api.bassrocket.com</td><td><span class="glyphicon glyphicon-ok"></span></td><td>172.25.87.9 [8081]</td><td></td><td><a href="#edit" class="btn btn-xs btn-default">Edit</a> <a href="#delete" class="btn btn-xs btn-danger">Delete</a></td></tr>
+            <tr><td>*.bobbyallen.me</td><td></td><td>172.25.87.2 [80]<br>172.25.87.5 [80]</td><td><span class="glyphicon glyphicon-ok"></span></td><td><a href="{{{ URL::route('rules.edit', 4) }}}" class="btn btn-xs btn-default">Edit</a></td></tr>
+            <tr><td>www.bassrocket.com</td><td><span class="glyphicon glyphicon-ok"></span></td><td>172.25.87.3 [8081]</td><td></td><td><a href="#edit" class="btn btn-xs btn-default">Edit</a></tr>
+            <tr><td>api.bassrocket.com</td><td><span class="glyphicon glyphicon-ok"></span></td><td>172.25.87.9 [8081]</td><td></td><td><a href="#edit" class="btn btn-xs btn-default">Edit</a></td></tr>
         </table>
     </div>
     <!-- End content -->

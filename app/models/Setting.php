@@ -23,7 +23,10 @@ class Setting extends \Eloquent
      */
     public static function setSetting($name, $value)
     {
-
+        $data = new self;
+        $data->name = $name;
+        $data->svalue = $value;
+        return $data->save();
     }
 
     /**
@@ -33,7 +36,9 @@ class Setting extends \Eloquent
      */
     public static function updateSetting($name, $value)
     {
-
+        $data = $data = self::where('name', $gname)->first();
+        $data->svalue = $value;
+        return $data->save();
     }
 
 }
