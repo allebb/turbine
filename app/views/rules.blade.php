@@ -26,12 +26,12 @@
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Target server</label>
-                    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="eg. 192.168.0.12 or web1.internal.local">
-                    <p class="help-block">You can add multiple target servers (a network load-balanced set-up) after you create this initial rule.</p>
+                    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="eg. 192.168.0.12 or web1.internal.local:8080">
+                    <p class="help-block">You can add multiple target servers (a network load-balanced set-up) after you create this initial rule using the 'edit' button below.</p>
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox"> Enabled
+                        <input type="checkbox" checked="checked"> Enabled
                     </label>
                 </div>
                 <button type="submit" class="btn btn-default">Create rule</button>
