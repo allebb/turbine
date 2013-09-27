@@ -1,5 +1,5 @@
-Example edit file:-
+{{-- Example edit file:-
 
 Hostname: {{{ $record->hostheader }}}
 Enabled: {{{ $record->enabled }}}
-NLB: {{{ $record->nlb }}}
+NLB: {{{ $record->nlb }}} --}}

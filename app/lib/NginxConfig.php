@@ -33,7 +33,7 @@ class NginxConfig
      * Stores the generated configuration file contents as an array before being flattened and written out.
      * @var type
      */
-    protected $config_cache = null;
+    protected $config_cache = array();
 
     /**
      * Add the host header(s) of which this rule should respond too.
@@ -77,6 +77,11 @@ class NginxConfig
         return $this;
     }
 
+    public function resetConfigCache()
+    {
+        $this->config_cache = array();
+    }
+
     /**
      * Adds a simple blank line to the configuration file.
      * @return \Turbine\NginxConfig
@@ -101,19 +106,27 @@ class NginxConfig
 
     protected function getConfigValue($content, $setting, $end = ';')
     {
-        $between = substr($content, strpos($content, $setting), strpos($content, ';') - strpos($content, $setting));
+        $between = substr($content, strpos($content, $setting), strpos($content, $end) - strpos($content, $setting));
         return trim(str_replace($setting, '', $between));
     }
 
     public function readConfig($filename)
     {
+        // Lets read in the existing configuration file...
         $config_contents = file_get_contents($filename);
+        //die($config_contents);
+
+        // We now reset the config cache..
+        $this->resetConfigCache();
+
+        // Based on the current 'read in' configuration file we'll now set the server port.
         $this->setListenPort($this->getConfigValue($config_contents, 'listen'));
-        $this->setHostheaders($this->getConfigValue($config_contents, 'server_name'));
 
-        $servers = trim(str_replace('}', '', $this->getConfigValue($config_contents, '_backend {', '}')));
-        $list_of_servers = explode(';', $servers);
-
+        // Based on the current servers 'server name' (host headers) we'll set these too also!
+        $this->setHostheaders($this->getConfigValue($config_contents, 'server_name', ' '));
+        // Here we set the list of NLB servers including their additonal configs.
+        $servers = $this->getConfigValue($config_contents, '_backend {', '} #EoLB');
+        $list_of_servers = explode(PHP_EOL, $servers);
         foreach ($list_of_servers as $server) {
             $server = trim($server); // We clear up the excess whitespacing.
             // Now we split up the values into an array ready to put back into our object...
@@ -123,15 +136,14 @@ class NginxConfig
             $opt_array = array();
             foreach ($options as $option) {
                 $parts = explode('=', $option);
-                $opt_array[$parts[0]] = $parts[1];
+                $opt_array[$parts[0]] = str_replace(';', '', $parts[1]);
             }
-            //var_dump($options);
             $this->addServerToNLB(array(
                 $server_parts[1], // The server address/port.
                 $opt_array));
         }
 
-        // Now we load in the NLB servers...
+        // Done!
     }
 
     /**
@@ -157,7 +169,7 @@ class NginxConfig
             }
             $this->addConfigLine('server ' . $server[0] . $params . ';', 1);
         }
-        $this->addConfigLine('}')
+        $this->addConfigLine('} #EoLB')
                 ->addBlankConfigLine()
                 ->addConfigLine('# Server block configuration')
                 ->addConfigLine('server {')
@@ -184,7 +196,7 @@ class NginxConfig
                 ->addConfigLine('}', 1)
                 ->addBlankConfigLine()
                 ->addConfigLine('client_max_body_size 64M;', 1)
-                ->addConfigLine('}');
+                ->addConfigLine('} #EoSB');
 
 
         // Debug, we can check the output of the generated file here!
