@@ -113,7 +113,7 @@ class NginxConfig
      * Formats a host name to enable it to be used as  a file name (used for config, log and access files.)
      * @return type
      */
-    protected function serverNameToFileName()
+    public function serverNameToFileName()
     {
         $filename = explode(' ', $this->server_name);
         $filename = str_replace('*', 'any', $filename[0]);

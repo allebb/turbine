@@ -32,7 +32,21 @@ class RulesController extends \BaseController
         //$create_rule->target_address = strtolower(Input::get('target_address')); // This will go directly into the nginx config file(s)
         $create_rule->enabled = Input::get('enabled');
         $create_rule->nlb = false;
-        $create_rule->save();
+        if ($create_rule->save()) {
+            // We now write out the configuration file for the nginx virtual host.
+            $config = new NginxConfig();
+            $config->setHostheaders($create_rule->hostheader);
+            $config->addServerToNLB(array(
+                strtolower(Input::get('target_address')),
+                array(
+                    'max_fails' => Setting::getSetting('maxfails'),
+                    'fail_timeout' => Setting::getSetting('failtimeout'),
+                )
+            ));
+            $config->writeConfig();
+            $config->toFile(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.conf');
+        }
+
         return Redirect::back()
                         ->with('flash_success', 'New rule for ' . $create_rule->hostheader . ' has been added successfully!');
     }
