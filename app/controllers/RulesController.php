@@ -3,6 +3,8 @@
 use \Rule;
 use \Input;
 
+//use Turbine\NginxConfig;
+
 class RulesController extends \BaseController
 {
 
@@ -43,6 +45,25 @@ class RulesController extends \BaseController
     public function edit($id)
     {
         $rule = Rule::find($id);
+        $config = new NginxConfig();
+        //$config->setListenPort(80);
+        $config->setHostheaders('www.example.com');
+
+        $config->addServerToNLB(
+                array(
+                    '172.25.87.87:80', array(
+                        'weight' => '1',
+                        'max_fails' => '8',
+                        'fail_timeout' => '30')
+        ));
+        $config->addServerToNLB(
+                array(
+                    '172.25.87.2:8081', array(
+                        'weight' => '2',
+                        'max_fails' => '1',
+                        'fail_timeout' => '10')
+        ));
+        var_dump($config->writeConfig());
         return View::make('rules.edit')
                         ->with('title', 'Rules') // Customise the HTML page title per controller 'action'.
                         ->with('record', $rule);
