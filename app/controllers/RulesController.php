@@ -46,24 +46,27 @@ class RulesController extends \BaseController
     {
         $rule = Rule::find($id);
         $config = new NginxConfig();
+        $config->readConfig('C:/Users/alleb4/Desktop/example.conf');
+        $config->writeConfig();
         //$config->setListenPort(80);
-        $config->setHostheaders('www.example.com api.example.com');
+        //$config->setHostheaders('www.example.com api.example.com');
 
-        $config->addServerToNLB(
+        /** $config->addServerToNLB(
                 array(
                     '172.25.87.87:80', array(
                         'weight' => '1',
                         'max_fails' => '8',
                         'fail_timeout' => '30')
         ));
-        $config->addServerToNLB(
+        //$config->addServerToNLB(
                 array(
                     '172.25.87.2:8081', array(
                         'weight' => '2',
                         'max_fails' => '1',
                         'fail_timeout' => '10')
         ));
-        $config->writeConfig();
+         * */
+        //$config->writeConfig();
         return View::make('rules.edit')
                         ->with('title', 'Rules') // Customise the HTML page title per controller 'action'.
                         ->with('record', $rule);
