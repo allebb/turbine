@@ -19,7 +19,7 @@ class SettingsController extends \BaseController
      */
     public function index()
     {
-        $settings = Setting::where('usersetting', true)->get();
+        $settings = Setting::where('usersetting', true)->orderBy('name')->get();
         return View::make('settings')
                         ->with('title', 'Settings')
                         ->with('settings', $settings);
