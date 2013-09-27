@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Ballen\\Executioner\\Executer' => $vendorDir . '/ballen/executioner/src/Ballen/Executioner/Executer.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Carbon\\Carbon' => $vendorDir . '/nesbot/carbon/src/Carbon/Carbon.php',
     'ClassPreloader\\Application' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Application.php',
@@ -47,9 +48,11 @@ return array(
     'Doctrine\\Common\\Cache\\FilesystemCache' => $vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache/FilesystemCache.php',
     'Doctrine\\Common\\Cache\\MemcacheCache' => $vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache/MemcacheCache.php',
     'Doctrine\\Common\\Cache\\MemcachedCache' => $vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache/MemcachedCache.php',
+    'Doctrine\\Common\\Cache\\MongoDBCache' => $vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache/MongoDBCache.php',
     'Doctrine\\Common\\Cache\\PhpFileCache' => $vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache/PhpFileCache.php',
     'Doctrine\\Common\\Cache\\RedisCache' => $vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache/RedisCache.php',
     'Doctrine\\Common\\Cache\\RiakCache' => $vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache/RiakCache.php',
+    'Doctrine\\Common\\Cache\\Version' => $vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache/Version.php',
     'Doctrine\\Common\\Cache\\WinCacheCache' => $vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache/WinCacheCache.php',
     'Doctrine\\Common\\Cache\\XcacheCache' => $vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache/XcacheCache.php',
     'Doctrine\\Common\\Cache\\ZendDataCache' => $vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache/ZendDataCache.php',
@@ -1217,7 +1220,9 @@ return array(
     'Symfony\\Component\\EventDispatcher\\GenericEvent' => $vendorDir . '/symfony/event-dispatcher/Symfony/Component/EventDispatcher/GenericEvent.php',
     'Symfony\\Component\\EventDispatcher\\ImmutableEventDispatcher' => $vendorDir . '/symfony/event-dispatcher/Symfony/Component/EventDispatcher/ImmutableEventDispatcher.php',
     'Symfony\\Component\\Filesystem\\Exception\\ExceptionInterface' => $vendorDir . '/symfony/filesystem/Symfony/Component/Filesystem/Exception/ExceptionInterface.php',
+    'Symfony\\Component\\Filesystem\\Exception\\FileNotFoundException' => $vendorDir . '/symfony/filesystem/Symfony/Component/Filesystem/Exception/FileNotFoundException.php',
     'Symfony\\Component\\Filesystem\\Exception\\IOException' => $vendorDir . '/symfony/filesystem/Symfony/Component/Filesystem/Exception/IOException.php',
+    'Symfony\\Component\\Filesystem\\Exception\\IOExceptionInterface' => $vendorDir . '/symfony/filesystem/Symfony/Component/Filesystem/Exception/IOExceptionInterface.php',
     'Symfony\\Component\\Filesystem\\Filesystem' => $vendorDir . '/symfony/filesystem/Symfony/Component/Filesystem/Filesystem.php',
     'Symfony\\Component\\Filesystem\\Tests\\FilesystemTestCase' => $vendorDir . '/symfony/filesystem/Symfony/Component/Filesystem/Tests/FilesystemTestCase.php',
     'Symfony\\Component\\Finder\\Adapter\\AbstractAdapter' => $vendorDir . '/symfony/finder/Symfony/Component/Finder/Adapter/AbstractAdapter.php',

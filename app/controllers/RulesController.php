@@ -2,6 +2,7 @@
 
 use \Rule;
 use \Input;
+use Ballen\Executioner\Executer;
 
 class RulesController extends \BaseController
 {
@@ -45,6 +46,11 @@ class RulesController extends \BaseController
             ));
             $config->writeConfig();
             $config->toFile(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.conf');
+
+            $service_reloader = new Executer;
+            $service_reloader->setApplication('service')->addArgument('nginx reload');
+            $service_reloader->execute();
+            //die(var_dump($service_reloader->resultAsArray()));
         }
 
         return Redirect::back()
