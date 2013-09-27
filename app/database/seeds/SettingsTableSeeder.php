@@ -35,6 +35,36 @@ class SettingsTableSeeder extends Illuminate\Database\Seeder
             'usersetting' => true,
         ));
         $setting->save();
+
+        // Path to the root of where the Nginx configs are save too.
+        $setting = new Setting(array(
+            'name' => 'nginxconfpath',
+            'svalue' => '/etc/turbine/confs',
+            'friendlyname' => 'Proxy configuration path',
+            'description' => 'The root path to where the Nginx virtual host configurations are stored.',
+            'usersetting' => true,
+        ));
+        $setting->save();
+
+        // Enable the remote API or not.
+        $setting = new Setting(array(
+            'name' => 'api_enabled',
+            'svalue' => 'false',
+            'friendlyname' => 'API remote access ',
+            'description' => 'Allow remote access to the Turbine RESTful API to add and ammend rules via. third-party applications.',
+            'usersetting' => true,
+        ));
+        $setting->save();
+
+        // API key
+        $setting = new Setting(array(
+            'name' => 'api_key',
+            'svalue' => '-- SET YOUR OWN API KEY HERE --',
+            'friendlyname' => 'API auth key',
+            'description' => 'Customise your own API key to prevent un-authorised access to the API.',
+            'usersetting' => true,
+        ));
+        $setting->save();
     }
 
 }
