@@ -1,15 +1,7 @@
 <?php
 
-//namespace Turbine;
-
 class NginxConfig
 {
-
-    /**
-     * Sets the nginx 'include' configuration file path/name of which to write the config chagnes too.
-     * @var string The file path and name to the Nginx configuration file to write too.
-     */
-    protected $config_file = null;
 
     /**
      * The server host header(s) to listen for.
@@ -24,29 +16,34 @@ class NginxConfig
     protected $listen_ports = '80';
 
     /**
-     * Stores a list of servers for network load-balanced configurations.
-     * @var array Array of servers and server config parameters.
+     * Stores a list of servers and directives for network load-balanced configuration.
+     * @var array Array of servers and server config directives.
      */
     protected $nlb_servers = array();
 
     /**
-     * Stores the generated configuration file contents as an array before being flattened and written out.
-     * @var type
+     * Stores the generated configuration file contents as an array before being flattened and written out to the file system.
+     * @var array
      */
     protected $config_cache = array();
 
     /**
-     * Add the host header(s) of which this rule should respond too.
-     * @param string $hostheaders
+     * Add the host header(s) of which this rule should respond too, this is the 'server_name' diirective, see: http://nginx.org/en/docs/http/server_names.html
+     * @param string $hostheaders Hostname or IP address etc.
      * @return \NginxConfig
      */
-    public function setHostheaders($hostheaders = '_default_')
+    public function setHostheaders($hostheaders = '_') // '_' is the 'default' catch_all server name!
     {
         $this->server_name = $hostheaders;
         return $this;
     }
 
-    public function setListenPort($port)
+    /**
+     * Sets the virtual host's port to respond/listen on.
+     * @param int $port The TCP port number to listen on. (Default is 80)
+     * @return \NginxConfig
+     */
+    public function setListenPort($port = 80)
     {
         $this->listen_ports = $port;
         return $this;
@@ -63,6 +60,31 @@ class NginxConfig
     public function addServerToNLB($config_array)
     {
         $this->nlb_servers[] = $config_array;
+        return $this;
+    }
+
+    /**
+     * Removes a server from the list of Network load-balanced servers.
+     * @param string $servername The name/IP of the server which you wish to remove from the config.
+     * @return \NginxConfig
+     */
+    public function removeServerFromNLB($servername)
+    {
+        foreach ($this->nlb_servers as $key => $server) {
+            if ($server[0] == $servername)
+                unset($this->nlb_servers[$key]);
+        }
+        return $this;
+    }
+
+    /**
+     * Resets the configuration cache array.
+     * @return \NginxConfig
+     */
+    public function resetConfigCache()
+    {
+        $this->config_cache = array();
+        return $this;
     }
 
     /**
@@ -77,13 +99,8 @@ class NginxConfig
         return $this;
     }
 
-    public function resetConfigCache()
-    {
-        $this->config_cache = array();
-    }
-
     /**
-     * Adds a simple blank line to the configuration file.
+     * Adds a blank line to the configuration file (for file formatting purposes only!).
      * @return \Turbine\NginxConfig
      */
     protected function addBlankConfigLine()
@@ -104,26 +121,31 @@ class NginxConfig
         return $filename;
     }
 
+    /**
+     * Returns the value of a configuration item.
+     */
     protected function getConfigValue($content, $setting, $end = ';')
     {
         $between = substr($content, strpos($content, $setting), strpos($content, $end) - strpos($content, $setting));
         return trim(str_replace($setting, '', $between));
     }
 
+    /**
+     * Reads and create a new config object based on an existing configuration file.
+     * @param string $filename The file path and name to the configuration file.
+     * @return \NginxConfig
+     */
     public function readConfig($filename)
     {
         // Lets read in the existing configuration file...
         $config_contents = file_get_contents($filename);
-        //die($config_contents);
-
-        // We now reset the config cache..
-        $this->resetConfigCache();
 
         // Based on the current 'read in' configuration file we'll now set the server port.
-        $this->setListenPort($this->getConfigValue($config_contents, 'listen'));
+        $this->setListenPort(trim($this->getConfigValue($config_contents, 'listen', '# Server host headers'), ';'));
 
         // Based on the current servers 'server name' (host headers) we'll set these too also!
-        $this->setHostheaders($this->getConfigValue($config_contents, 'server_name', ' '));
+        $this->setHostheaders(trim($this->getConfigValue($config_contents, 'server_name', '# Log files'), ';'));
+
         // Here we set the list of NLB servers including their additonal configs.
         $servers = $this->getConfigValue($config_contents, '_backend {', '} #EoLB');
         $list_of_servers = explode(PHP_EOL, $servers);
@@ -142,15 +164,19 @@ class NginxConfig
                 $server_parts[1], // The server address/port.
                 $opt_array));
         }
-
-        // Done!
+        return $this;
     }
 
     /**
-     * Writes the Nginx configuration out to the configuration file.
+     * Writes the Nginx configuration file to the config cache ready to be sent to the browser or out to a file.
+     * @return \NginxConfig
      */
     public function writeConfig()
     {
+        // We now reset the config cache..
+        $this->resetConfigCache();
+
+        // Now we cache the file contents
         $this->addConfigLine('##')
                 ->addConfigLine('# Turbine Proxy Configuration File for ' . $this->server_name)
                 ->addConfigLine('##')
@@ -193,17 +219,46 @@ class NginxConfig
                 ->addConfigLine('proxy_set_header X-Real-IP $remote_addr;', 2)
                 ->addConfigLine('proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;', 2)
                 ->addConfigLine('proxy_pass  http://' . $this->serverNameToFileName() . '_nlb_backend;', 2)
-                ->addConfigLine('}', 1)
+                ->addConfigLine('} # EoPFB', 1)
                 ->addBlankConfigLine()
                 ->addConfigLine('client_max_body_size 64M;', 1)
+                ->addBlankConfigLine()
                 ->addConfigLine('} #EoSB');
 
+        return $this;
+    }
 
-        // Debug, we can check the output of the generated file here!
-        foreach ($this->config_cache as $line) {
-            echo $line;
-        }
-        // This will need to be written out to a file in /etc/turbine/rcps/(filename)
+    /**
+     * Print the contents of the configuration file to the screen (using 'echo')
+     * @return string The plaintext configuration data.
+     */
+    public function toSrceen()
+    {
+        return implode('', $this->config_cache);
+    }
+
+    /**
+     * Write the contents of the configuration file to to the file system.
+     * @param string $filename The file path and name of the file to save.
+     * @return boolean
+     */
+    public function toFile($filename)
+    {
+        return file_put_contents($filename, implode('', $this->config_cache));
+    }
+
+    /**
+     * Exports the configuration out as JSON.
+     * @return string JSON representation of the configuration settings.
+     */
+    public function toJSON()
+    {
+        return json_encode(
+                array(
+                    'server_name' => $this->server_name,
+                    'listen' => $this->listen_ports,
+                    'nlb_servers' => $this->nlb_servers,
+        ));
     }
 
 }

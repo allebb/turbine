@@ -3,8 +3,6 @@
 use \Rule;
 use \Input;
 
-//use Turbine\NginxConfig;
-
 class RulesController extends \BaseController
 {
 
@@ -46,30 +44,21 @@ class RulesController extends \BaseController
     {
         $rule = Rule::find($id);
 
-        $config = new NginxConfig();
-        $config->readConfig('C:/Users/alleb4/Desktop/example.conf');
-        $config->writeConfig();
-        /**$config->setListenPort(80);
-        $config->setHostheaders('www.example.com api.example.com');
-
-         $config->addServerToNLB(
-                array(
-                    '172.25.87.87:80', array(
-                        'weight' => '1',
-                        'max_fails' => '8',
-                        'fail_timeout' => '30')
-        ));
-        $config->addServerToNLB(
-                array(
-                    '172.25.87.2:8081', array(
-                        'weight' => '2',
-                        'max_fails' => '1',
-                        'fail_timeout' => '10')
-        ));
-
-        $config->writeConfig();
-         * */
-
+        // Example usage
+        /**
+          $config = new NginxConfig();
+          $config->readConfig('C:/Users/alleb4/Desktop/example2.conf');
+          $config->removeServerFromNLB('172.25.87.87:80');
+          $config->addServerToNLB(array('172.25.87.99', array('weight' => '16')));
+          $config->addServerToNLB(array('172.25.87.3', array('weight' => 8, 'max_fails' => 99)));
+          $config->removeServerFromNLB('172.25.87.3');
+          echo $config->setListenPort(80)
+          ->setHostheaders()
+          ->writeConfig()
+          ->toSrceen(); // We can write it out to the screen..
+          //->toFile('C:/Users/alleb4/Desktop/example2.conf'); // or to the file system!
+          //->toJSON();
+         */
         return View::make('rules.edit')
                         ->with('title', 'Rules') // Customise the HTML page title per controller 'action'.
                         ->with('record', $rule);
