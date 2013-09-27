@@ -47,7 +47,7 @@ class RulesController extends \BaseController
         $rule = Rule::find($id);
         $config = new NginxConfig();
         //$config->setListenPort(80);
-        $config->setHostheaders('www.example.com');
+        $config->setHostheaders('www.example.com api.example.com');
 
         $config->addServerToNLB(
                 array(

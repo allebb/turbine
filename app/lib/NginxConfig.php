@@ -93,21 +93,19 @@ class NginxConfig
      */
     protected function serverNameToFileName()
     {
-        $filename = '';
-        $filename = str_replace('*', 'any', $this->server_name);
+        $filename = explode(' ', $this->server_name);
+        $filename = str_replace('*', 'any', $filename[0]);
         $filename = str_replace('.', '_', $filename);
         return $filename;
     }
 
     public function writeConfig()
     {
-        $this->addBlankConfigLine()
-                ->addConfigLine('##')
-                ->addConfigLine('# Turbine Proxy Configuration File')
+        $this->addConfigLine('##')
+                ->addConfigLine('# Turbine Proxy Configuration File for ' .$this->server_name)
                 ->addConfigLine('##')
                 ->addBlankConfigLine()
-                ->addBlankConfigLine()
-                ->addConfigLine('upstream ' .$this->serverNameToFileName().'_nlb_backend {');
+                ->addConfigLine('upstream ' . $this->serverNameToFileName() . '_nlb_backend {');
         foreach ($this->nlb_servers as $server) {
             $params = '';
             foreach ($server[1] as $vkey => $vval) {
@@ -116,7 +114,6 @@ class NginxConfig
             $this->addConfigLine('server ' . $server[0] . $params, 1);
         }
         $this->addConfigLine('}')
-                ->addBlankConfigLine()
                 ->addBlankConfigLine()
                 ->addConfigLine('server {')
                 ->addConfigLine('listen ' . $this->listen_ports . ';', 1)
@@ -128,10 +125,10 @@ class NginxConfig
                 ->addConfigLine('try_files /maintenance.html @proxy;', 1)
                 ->addBlankConfigLine()
                 ->addConfigLine('location @proxy {', 1)
-                ->addConfigLine('proxy_set_header Host \$host;', 2)
-                ->addConfigLine('proxy_set_header X-Real-IP \$remote_addr;', 2)
-                ->addConfigLine('proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;', 2)
-                ->addConfigLine('proxy_pass  http://' .$this->serverNameToFileName().'_nlb_backend;', 2)
+                ->addConfigLine('proxy_set_header Host $host;', 2)
+                ->addConfigLine('proxy_set_header X-Real-IP $remote_addr;', 2)
+                ->addConfigLine('proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;', 2)
+                ->addConfigLine('proxy_pass  http://' . $this->serverNameToFileName() . '_nlb_backend;', 2)
                 ->addConfigLine('}', 1)
                 ->addBlankConfigLine()
                 ->addConfigLine('client_max_body_size 64M;', 1)
