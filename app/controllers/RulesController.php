@@ -63,7 +63,7 @@ class RulesController extends \BaseController
                         'max_fails' => '1',
                         'fail_timeout' => '10')
         ));
-        var_dump($config->writeConfig());
+        $config->writeConfig();
         return View::make('rules.edit')
                         ->with('title', 'Rules') // Customise the HTML page title per controller 'action'.
                         ->with('record', $rule);
