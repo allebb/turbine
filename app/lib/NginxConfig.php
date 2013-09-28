@@ -1,5 +1,7 @@
 <?php
 
+use Ballen\Executioner\Executer;
+
 class NginxConfig
 {
 
@@ -269,6 +271,16 @@ class NginxConfig
                     'listen' => $this->listen_ports,
                     'nlb_servers' => $serverlist,
         ));
+    }
+
+    /**
+     * Attemps to reload the nginx service.
+     */
+    public function reloadConfig()
+    {
+        $server_reload = new Executer;
+        $server_reload->setApplication('service nginx reload');
+        $server_reload->execute();
     }
 
 }

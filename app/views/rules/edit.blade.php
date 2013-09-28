@@ -82,7 +82,7 @@
                             <input type="text" class="form-control" name="weight" id="weight" placeholder="eg. 1">
                         </div>
                         <div class="col-lg-3">
-                            {{ Form::submit('Save changes', array('class' => 'btn btn-primary')) }}
+                            {{ Form::submit('Add target', array('class' => 'btn btn-default')) }}
                         </div>
                     </div>
                 </div>

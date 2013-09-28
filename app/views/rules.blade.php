@@ -13,11 +13,11 @@
             @include('includes/flashmsgs')
 
             <h2>Existing rules</h2>
-            @if($rules->count()>0)
+            @if($total_rules > 0)
             <table class="table table-hover">
                 <tr><th>Host header</th><th>Enabled</th><th>Target(s)</th><th>Load-balanced</th><th></th></tr>
                 @foreach($rules as $rule)
-                <tr><td>{{{ $rule->hostheader }}}</td><td>@if($rule->enabled)<span class="glyphicon glyphicon-ok"></span>@endif</td><td>To be loaded from file!</td><td>@if($rule->nlb)<span class="glyphicon glyphicon-ok"></span>@endif</td><td><a href="{{{ URL::route('rules.edit', $rule->id) }}}" class="btn btn-xs btn-default">Edit</a></td></tr>
+                <tr><td>{{{ $rule->hostheader }}}</td><td>@if($rule->enabled)<span class="glyphicon glyphicon-ok"></span>@endif</td><td>{{ $rule->targets }}</td><td>@if($rule->nlb)<span class="glyphicon glyphicon-ok"></span>@endif</td><td><a href="{{{ URL::route('rules.edit', $rule->id) }}}" class="btn btn-xs btn-info">Edit</a></td></tr>
                 @endforeach
             </table>
             @else
@@ -41,7 +41,7 @@
                     <input name="enabled" id="enabled" type="checkbox" checked="checked"> Enabled
                 </label>
             </div>
-            {{ Form::submit('Create rule', array('class' => 'btn btn-default')) }}
+            {{ Form::submit('Create rule', array('class' => 'btn btn-primary')) }}
             {{ Form::close() }}
         </form>
         <p>&nbsp;</p>

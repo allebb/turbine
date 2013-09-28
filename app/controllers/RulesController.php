@@ -21,9 +21,40 @@ class RulesController extends \BaseController
     public function index()
     {
         $rules = Rule::all();
+
+        // Lets load in each of the rules and get the target infomation for each..
+        $combined_list = array();
+        foreach ($rules as $rule) {
+            $combined = array();
+
+            // Now we load in each config file...
+            $reader = new NginxConfig();
+            $reader->setHostheaders($rule->hostheader);
+            $reader->readConfig(Setting::getSetting('nginxconfpath') . '/' . $reader->serverNameToFileName() . '.enabled.conf');
+            $targets = $reader->writeConfig()->toJSON();
+            $combined['hostheader'] = $rule->hostheader;
+            $target_array = json_decode($targets, true);
+            $target_string = '';
+            $total_hosts = 0;
+            foreach ($target_array['nlb_servers'] as $single_target) {
+                $target_string = $target_string . $single_target['target'] . '<br />';
+                $total_hosts++;
+            }
+            $combined['id'] = $rule->id;
+            $combined['targets'] = $target_string;
+            $combined['enabled'] = true;
+            if ($total_hosts > 1) {
+                $combined['nlb'] = true;
+            } else {
+                $combined['nlb'] = false;
+            }
+            $combined_list[] = $combined;
+        }
+
         return View::make('rules')
                         ->with('title', 'Rules') // Customise the HTML page title per controller 'action'.
-                        ->with('rules', $rules);
+                        ->with('total_rules', $rules->count())
+                        ->with('rules', json_decode(json_encode($combined_list)));
     }
 
     public function store()
@@ -40,6 +71,7 @@ class RulesController extends \BaseController
             $config->addServerToNLB(array(
                 strtolower(Input::get('target_address')),
                 array(
+                    'weight' => 1,
                     'max_fails' => Setting::getSetting('maxfails'),
                     'fail_timeout' => Setting::getSetting('failtimeout'),
                 )
@@ -74,7 +106,7 @@ class RulesController extends \BaseController
 
         //die(var_dump($targets));
         return View::make('rules.edit')
-                        ->with('title', 'Rules') // Customise the HTML page title per controller 'action'.
+                        ->with('title', 'Edit rules') // Customise the HTML page title per controller 'action'.
                         ->with('record', $rule)
                         ->with('targets', json_decode($targets));
     }
