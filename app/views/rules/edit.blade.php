@@ -11,15 +11,10 @@
             </div>
             @include('includes/flashmsgs')
             @if($record)
-            {{ Form::open(array('route' => array('rules.update', $record->id), 'action' => 'PUT', 'role' => 'form')) }}
+            {{ Form::open(array('route' => array('rules.update', $record->id), 'method' => 'PUT', 'role' => 'form')) }}
             <div class="form-group">
                 <label for="origin_address">Origin address (Host header)</label>
                 <input type="text" class="form-control" name="origin_address" id="origin_address" placeholder="eg. www.mydomain.com or *.mydomain.com" value="{{{ $record->hostheader }}}">
-                <div class="checkbox">
-                    <label>
-                        <input name="enabled" id="enabled" type="checkbox" @if($record->enabled)checked="checked"@endif> Enabled
-                    </label>
-                </div>
             </div>
 
             <p>&nbsp;</p>
@@ -58,7 +53,7 @@
                             <input type="text" class="form-control" name="weight_{{ md5($target->target) }}" id="weight_{{ md5($target->target) }}" value="{{ $target->weight }}">
                         </div>
                         <div class="col-lg-3">
-                            <button type="button" class="btn btn-danger">Delete target</button>
+                            <a href="{{ URL::action('UtilController@getDeleteTarget', array($record->id, md5($target->target))) }}" type="button" class="btn btn-danger">Delete target</a>
                         </div>
                     </div>
                 </div>
@@ -66,6 +61,11 @@
                 @else
                 <p>There are currently zero targets configured.</p>
                 @endif
+                {{ Form::submit('Save changes', array('class' => 'btn btn-primary')) }}
+                {{ Form::close() }}
+
+                <p>&nbsp;</p>
+                {{ Form::open(array('action' => array('UtilController@postAddTarget', $record->id), 'method' => 'POST', 'role' => 'form')) }}
                 <div class="form-group">
                     <h4>Add new target</h4>
                     <div class="row">
@@ -82,15 +82,12 @@
                             <input type="text" class="form-control" name="weight" id="weight" placeholder="eg. 1">
                         </div>
                         <div class="col-lg-3">
-                            <button type="button" class="btn btn-default">Add target</button>
+                            {{ Form::submit('Save changes', array('class' => 'btn btn-primary')) }}
                         </div>
                     </div>
-
                 </div>
-                {{ Form::submit('Save changes', array('class' => 'btn btn-primary')) }}
+
                 {{ Form::close() }}
-                </form>
-                <p>&nbsp;</p>
 
                 <h2>Delete rule</h2>
                 <p>If you wish to delete this rule and stop routing to the backend server(s) press the delete button and confirm you wish to destroy this rule.</p>

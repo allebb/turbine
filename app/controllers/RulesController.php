@@ -10,7 +10,7 @@ class RulesController extends \BaseController
     function __construct()
     {
         $this->beforeFilter('auth.basic');
-        $this->beforeFilter('csrf', array('on' => array('update')));
+        //$this->beforeFilter('csrf', array('on' => array('update')));
     }
 
     /**
@@ -54,7 +54,7 @@ class RulesController extends \BaseController
         }
 
         return Redirect::back()
-                        ->with('flash_success', 'New rule for ' . $create_rule->hostheader . ' has been added successfully!');
+                        ->with('flash_success', 'The rule for ' . $create_rule->hostheader . ' has been added successfully!');
     }
 
     /**

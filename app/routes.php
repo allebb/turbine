@@ -20,3 +20,4 @@ Route::get('logout', array('as' => 'logout', function() {
         Auth::logout();
         return Redirect::route('.index');
     }));
+Route::controller('action', 'UtilController');
