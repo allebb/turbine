@@ -253,11 +253,21 @@ class NginxConfig
      */
     public function toJSON()
     {
+        $serverlist = array();
+        foreach ($this->nlb_servers as $value) {
+            //die(var_dump($value));
+            $serverlist[] = array(
+                'target' => $value[0],
+                'max_fails' => $value[1]['max_fails'],
+                'fail_timeout' => $value[1]['fail_timeout'],
+                'weight' => $value[1]['weight'],
+            );
+        }
         return json_encode(
                 array(
                     'server_name' => $this->server_name,
                     'listen' => $this->listen_ports,
-                    'nlb_servers' => $this->nlb_servers,
+                    'nlb_servers' => $serverlist,
         ));
     }
 

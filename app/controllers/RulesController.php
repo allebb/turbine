@@ -45,7 +45,7 @@ class RulesController extends \BaseController
                 )
             ));
             $config->writeConfig();
-            $config->toFile(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.conf');
+            $config->toFile(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
 
             $service_reloader = new Executer;
             $service_reloader->setApplication('service')->addArgument('nginx reload');
@@ -64,24 +64,19 @@ class RulesController extends \BaseController
     {
         $rule = Rule::find($id);
 
-        // Example usage
-        /**
-          $config = new NginxConfig();
-          $config->readConfig('C:/Users/alleb4/Desktop/example2.conf');
-          $config->removeServerFromNLB('172.25.87.87:80');
-          $config->addServerToNLB(array('172.25.87.99', array('weight' => '16')));
-          $config->addServerToNLB(array('172.25.87.3', array('weight' => 8, 'max_fails' => 99)));
-          $config->removeServerFromNLB('172.25.87.3');
-          echo $config->setListenPort(80)
-          ->setHostheaders()
-          ->writeConfig()
-          ->toSrceen(); // We can write it out to the screen..
-          //->toFile('C:/Users/alleb4/Desktop/example2.conf'); // or to the file system!
-          //->toJSON();
-         */
+        if ($rule) {
+            // Load in the current configuration
+            $config = new NginxConfig();
+            $config->setHostheaders($rule->hostheader);
+            $config->readConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
+            $targets = $config->writeConfig()->toJSON();
+        }
+
+        //die(var_dump($targets));
         return View::make('rules.edit')
                         ->with('title', 'Rules') // Customise the HTML page title per controller 'action'.
-                        ->with('record', $rule);
+                        ->with('record', $rule)
+                        ->with('targets', json_decode($targets));
     }
 
     /**

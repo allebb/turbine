@@ -27,41 +27,45 @@
                 <h4>Existing target(s)</h4>
                 <div class="row">
                     <div class="col-lg-3">
-                        <label for="target_">Target server</label>
+                        <label>Target server</label>
                     </div>
                     <div class="col-lg-1">
-                        <label for="maxfails_">Max fails</label>
+                        <label>Max fails</label>
                     </div>
                     <div class="col-lg-1">
-                        <label for="failtimeout_">Fail timeout</label>
+                        <label>Fail timeout</label>
                     </div>
                     <div class="col-lg-1">
-                        <label for="weight_">Weight</label>
+                        <label>Weight</label>
                     </div>
                     <div class="col-lg-3">
                     </div>
                 </div>
-
+                @if($targets)
+                @foreach($targets->nlb_servers as $target)
                 <div class="form-group">
                     <div class="row">
                         <div class="col-lg-3">
-                            <input type="text" class="form-control" name="target_" id="target_">
+                            <input type="text" class="form-control" name="target_{{ md5($target->target) }}" id="target_{{ md5($target->target) }}" value="{{ $target->target }}">
                         </div>
                         <div class="col-lg-1">
-                            <input type="text" class="form-control" name="maxfails_" id="maxfails_">
+                            <input type="text" class="form-control" name="maxfails_{{ md5($target->target) }}" id="maxfails_{{ md5($target->target) }}" value="{{ $target->max_fails }}">
                         </div>
                         <div class="col-lg-1">
-                            <input type="text" class="form-control" name="failtimeout_" id="failtimeout_">
+                            <input type="text" class="form-control" name="failtimeout_{{ md5($target->target) }}" id="failtimeout_{{ md5($target->target) }}" value="{{ $target->fail_timeout }}">
                         </div>
                         <div class="col-lg-1">
-                            <input type="text" class="form-control" name="weight_" id="weight_">
+                            <input type="text" class="form-control" name="weight_{{ md5($target->target) }}" id="weight_{{ md5($target->target) }}" value="{{ $target->weight }}">
                         </div>
                         <div class="col-lg-3">
                             <button type="button" class="btn btn-danger">Delete target</button>
                         </div>
                     </div>
                 </div>
-
+                @endforeach
+                @else
+                <p>There are currently zero targets configured.</p>
+                @endif
                 <div class="form-group">
                     <h4>Add new target</h4>
                     <div class="row">
