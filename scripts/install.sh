@@ -67,13 +67,15 @@ cp -fr $EXTRACTED_FILES/* /etc/turbine/webapp/
 cp -fr /etc/turbine/webapp/scripts/common/* /etc/turbine/configs/common/
 
 # Now we set any required directory permissions as required.
-chmod -R 777 /etc/turbine/webapp/app/storage
-chmod -R 777 /etc/turbine/webapp/app/database/production.sqlite
+#chmod -R 777 /etc/turbine/webapp/app/storage
+#chmod 777 /etc/turbine/webapp/app/database
+#chmod 777 /etc/turbine/webapp/app/database/production.sqlite
+chown -R www-data:wwwdata /etc/turbine
 
 # We'll now add a new account for Nginx to run under and will also add that user to the sudoers list (as I can't think of a more secure way to do it at present)
 echo 'Adding nginx user to sudoers...'
 echo "$NGINX_USER ALL=NOPASSWD: /usr/bin/service nginx reload" > /etc/sudoers.d/turbine
-chmod 440 /etc/turbine/sudoers.d/turbine
+chmod 0440 /etc/sudoers.d/turbine
 # Could also try: '/etc/init.d/nginx restart' if that doesn't work!
 
 # May have to use as a work around for other Linux OSes (that may now have an standard 'include' directory)..
