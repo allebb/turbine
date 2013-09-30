@@ -11,27 +11,22 @@ NGINX_USER='www-data'
 HOSTNAME=$(cat /etc/hostname)
 
 echo "Turbine Installer (v.$TURBINE_VERSION)"
-echo "===================================="
-echo .
-echo "Welcome to the Turbine installer, this installer will automatically install and"
-echo "configure the required packages and dependencies required to run the Turbine software."
-echo "It is recommended that you only install this on a clean server with no other"
-echo "web servers installed and running!"
-echo.
-echo "Please tell this installer where it can find the extracted download directory "
-echo "for example eg. /home/jdoe/downloads/turbine_1.0.0, if you haven't yet extracted"
-echo "the download archieve do so with: tar -zxvf turbine_1.x.x.tar.gz"
-echo .
-echo "If you wish to cancel this installer, please press CTRL+C now!"
-echo .
+echo -e "====================================\n"
+echo -e "Welcome to the Turbine installer, this installer will automatically install and"
+echo -e "configure the required packages and dependencies required to run the Turbine software."
+echo -e "It is recommended that you only install this on a clean server with no other"
+echo -e "web servers installed and running!\n"
+echo -e "Please tell this installer where it can find the extracted download directory "
+echo -e "for example eg. /home/jdoe/downloads/turbine_1.0.0, if you haven't yet extracted"
+echo -e"the download archieve do so with: tar -zxvf turbine_1.x.x.tar.gz\n"
+echo -e "If you wish to cancel this installer, please press CTRL+C now!\n"
 echo -n "Install from: "
 read EXTRACTED_FILES
-echo .
+echo -e "\n"
 
 # LLets see if the directory does not exist..
 if [ ! -d "$EXTRACTED_FILES" ]; then
-    echo 'That specified directory does not exist, please try again by re-running this install script!';
-    echo .
+    echo -e 'That specified directory does not exist, please try again by re-running this install script!\n';
     exit
 fi
 
@@ -41,8 +36,7 @@ if [ ! -f "$EXTRACTED_FILES/composer.json" ]; then
     echo 'It would appear that the folder you have specified is incorrect, it should'
     echo 'be the path to the root of the extracted tar.gz file (no trailing slash),'
     echo 'eg. the folder that contains the composer.json file, please try again'
-    echo 'by re-running this install script!'
-    echo .
+    echo -e 'by re-running this install script!\n'
     exit
 fi
 
@@ -96,14 +90,10 @@ echo "Starting Turbine (nginx)..."
 /etc/init.d/nginx restart
 
 
-echo "Installation complete!"
-echo .
-echo  "You should now be able to login and administer Turbine using the following details:"
-echo .
-echo "  Address:  http://{$HOSTNAME}:8280"
-echo "  Username: admin"
-echo "  Password: password"
-echo .
-echo "Thanks for using Turbine!"
-echo .
+echo -e "Installation complete!\n"
+echo -e "You should now be able to login and administer Turbine using the following details:\n"
+echo -e "  Address:  http://$HOSTNAME:8280"
+echo -e "  Username: admin"
+echo -e "  Password: password\n"
+echo -e "Thanks for using Turbine!\n"
 echo "For help and support please visit the website at: http://bobsta63.github.io/turbine/"
