@@ -68,6 +68,7 @@ cp -fr /etc/turbine/webapp/scripts/common/* /etc/turbine/configs/common/
 # Now we set any required directory permissions as required.
 chown -R www-data:wwwdata /etc/turbine
 chmod -R 777 /etc/turbine/webapp/app/storage
+chmod -R 777 /etc/turbine/webapp/configs
 chmod 777 /etc/turbine/webapp/app/database
 chmod 777 /etc/turbine/webapp/app/database/production.sqlite
 
