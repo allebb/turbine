@@ -25,7 +25,8 @@ echo -e "\n"
 
 # LLets see if the directory does not exist..
 if [ ! -d "$EXTRACTED_FILES" ]; then
-    echo -e 'That specified directory does not exist, please try again by re-running this install script!\n';
+    echo -e 'That specified directory does not exist, please try again by re-running this'
+    echo -e 'install script!\n'
     exit
 fi
 
