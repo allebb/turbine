@@ -12,13 +12,12 @@ HOSTNAME=$(cat /etc/hostname)
 
 echo "Turbine Installer (v.$TURBINE_VERSION)"
 echo -e "====================================\n"
-echo -e "Welcome to the Turbine installer, this installer will automatically install and"
-echo -e "configure the required packages and dependencies required to run the Turbine software."
-echo -e "It is recommended that you only install this on a clean server with no other"
-echo -e "web servers installed and running!\n"
-echo -e "Please tell this installer where it can find the extracted download directory "
-echo -e "for example eg. /home/jdoe/downloads/turbine_1.0.0, if you haven't yet extracted"
-echo -e"the download archieve do so with: tar -zxvf turbine_1.x.x.tar.gz\n"
+echo -e "Welcome to the Turbine installer, this installer will automatically "
+echo -e "install and configure the required packages and dependencies required"
+echo -e " to run the Turbine software. It is recommended that you only install"
+echo -e "this on a clean server with no other web servers installed and running!\n"
+echo -e "Please tell this installer where it can find the extracted download"
+echo -e "directory for example eg. /home/jdoe/downloads/turbine_1.0.0.\n"
 echo -e "If you wish to cancel this installer, please press CTRL+C now!\n"
 echo -n "Install from: "
 read EXTRACTED_FILES
@@ -67,10 +66,10 @@ cp -fr $EXTRACTED_FILES/* /etc/turbine/webapp/
 cp -fr /etc/turbine/webapp/scripts/common/* /etc/turbine/configs/common/
 
 # Now we set any required directory permissions as required.
-#chmod -R 777 /etc/turbine/webapp/app/storage
-#chmod 777 /etc/turbine/webapp/app/database
-#chmod 777 /etc/turbine/webapp/app/database/production.sqlite
 chown -R www-data:wwwdata /etc/turbine
+chmod -R 777 /etc/turbine/webapp/app/storage
+chmod 777 /etc/turbine/webapp/app/database
+chmod 777 /etc/turbine/webapp/app/database/production.sqlite
 
 # We'll now add a new account for Nginx to run under and will also add that user to the sudoers list (as I can't think of a more secure way to do it at present)
 echo 'Adding nginx user to sudoers...'
@@ -94,9 +93,10 @@ echo "Starting Turbine (nginx)..."
 
 
 echo -e "Installation complete!\n"
-echo -e "You should now be able to login and administer Turbine using the following details:\n"
+echo -e "You should now be able to login and administer Turbine using the following"
+echo -e "details:\n"
 echo -e "  Address:  http://$HOSTNAME:8280"
 echo -e "  Username: admin"
 echo -e "  Password: password\n"
 echo -e "Thanks for using Turbine!\n"
-echo "For help and support please visit the website at: http://bobsta63.github.io/turbine/"
+echo "Visit the website at: http://bobsta63.github.io/turbine/"
