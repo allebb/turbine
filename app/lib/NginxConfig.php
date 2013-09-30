@@ -288,7 +288,7 @@ class NginxConfig
     {
         $server_reload = new Executer;
         $server_reload->setApplication('sudo /usr/bin/service nginx reload');
-        //$server_reload->execute();
+        $server_reload->execute();
     }
 
     /**
