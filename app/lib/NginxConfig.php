@@ -220,7 +220,7 @@ class NginxConfig
                 ->addConfigLine('access_log /etc/turbine/logs/' . $this->serverNameToFileName() . '.access.log;', 1)
                 ->addConfigLine('error_log /etc/turbine/logs/' . $this->serverNameToFileName() . '.error.log;', 1)
                 ->addBlankConfigLine()
-                ->addConfigLine('root /etc/turbine/html_pages;', 1)
+                ->addConfigLine('root /etc/turbine/static;', 1)
                 ->addConfigLine('try_files /maintenance.html @proxy;', 1)
                 ->addBlankConfigLine()
                 ->addConfigLine('# Proxy forwarding', 1)

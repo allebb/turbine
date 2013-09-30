@@ -28,6 +28,7 @@ sed -i "s/\;listen = 127\.0\.0\.1\:9000/listen = \/tmp\/php5-fpm\.sock/g" /etc/p
 echo "Creating directory structures..."
 # Lets now create the base folders which we need
 mkdir /etc/turbine # The main application path.
+mkdir /etc/turbine/static # A place to store nginx html file eg. maintenance.html page.
 mkdir /etc/turbine/webapp # This is where the main web app code lives!
 mkdir /etc/turbine/configs # Nginx VHOST NLB/Proxy configs will be stored here!
 mkdir /etc/turbine/configs/webapp # The main webGUI configuration for Nginx.
