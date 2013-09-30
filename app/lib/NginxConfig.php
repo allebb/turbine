@@ -160,6 +160,14 @@ class NginxConfig
             $opt_array = array();
             foreach ($options as $option) {
                 $parts = explode('=', $option);
+                /**
+                 * IF YOU ARE RECIEVING ERRORS HERE, CHECK THAT YOU'RE NOT TRYING TO LOAD IN CONFIG
+                 * FILES FROM ANOTHER PLATFORM (EG. CONFIG FILES CREATED ON LINUX AND TRYING TO OPEN ON WINDOWS)
+                 * AS THERE APPEARS TO BE AN ISSUE AT PRESENT WITH THIS, SO DELETE ALL YOUR EXISTING RULES
+                 * THEN RE-CREATE THEM ON A NEW PLATFORM AND THIS DOES THE TRICK! - WILL LOOK INTO A WORK-AROUND
+                 *  FOR THIS AT A LATER DATE BUT TO TBE HONEST, NOT REALLY A BIG DEAL AS THIS WOULD ONLY REALLY
+                 *  HAPPEN IN DEVELOPMENT ETC.
+                 */
                 $opt_array[$parts[0]] = str_replace(';', '', $parts[1]);
             }
             $this->addServerToNLB(array(
