@@ -78,11 +78,7 @@ class RulesController extends \BaseController
             ));
             $config->writeConfig();
             $config->toFile(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
-
-            $service_reloader = new Executer;
-            $service_reloader->setApplication('service')->addArgument('nginx reload');
-            $service_reloader->execute();
-            //die(var_dump($service_reloader->resultAsArray()));
+            $config->reloadConfig();
         }
 
         return Redirect::back()
@@ -145,7 +141,7 @@ class RulesController extends \BaseController
                 $delete_rule->delete();
             }
             // Reload the service.
-            //$config->reloadConfig();
+            $config->reloadConfig();
         }
         return Redirect::route('rules.index')
                         ->with('flash_success', 'The rule for ' . json_decode($config->toJSON())->server_name . ' has been deleted successfully!');

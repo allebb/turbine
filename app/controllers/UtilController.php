@@ -22,6 +22,7 @@ class UtilController extends \BaseController
                 }
             }
             $config->writeConfig()->toFile(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
+            $config->reloadConfig();
         }
         return Redirect::back()
                         ->with('flash_success', 'Target ' . strtolower(Input::get('target')) . ' has been successfully deleted from this rule!');
@@ -44,6 +45,7 @@ class UtilController extends \BaseController
                 )
             ));
             $config->writeConfig()->toFile(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
+            $config->reloadConfig();
         }
         return Redirect::back()
                         ->with('flash_success', 'New target ' . strtolower(Input::get('target')) . ' has been added!');
