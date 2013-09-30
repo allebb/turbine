@@ -6,8 +6,8 @@
 # Created by: Bobby Allen (ballen@bobbyallen.me)          #
 ###########################################################
 
-TURBINE_VERSION='1.0 alpha'
-NGINX_USER='http'
+TURBINE_VERSION='0.1.1 dev'
+NGINX_USER='www-data'
 HOSTNAME=$(cat /etc/hostname)
 
 echo "Turbine Installer (v.$TURBINE_VERSION)"
