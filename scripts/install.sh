@@ -17,6 +17,8 @@ apt-get -y install nginx php5-fpm php5-curl php5-json php5-sqlite php5-mcrypt
 
 echo "Configuring Nginx..."
 # We now need to make some changes to the default nginx.conf file...
+echo '# Load the Turbine WebGUI configuration.' >> /etc/nginx/nginx.conf
+echo 'include /etc/turbine/configs/webapp/turbine_nginx.conf' >> /etc/nginx/nginx.conf
 sed -i "s/include \/etc\/nginx\/sites-enabled\/\*/include \/etc\/turbine\/configs\/\*\.enabled.conf/g" /etc/nginx/nginx.conf
 
 echo "Configuring PHP-FPM for Nginx..."
@@ -26,8 +28,10 @@ sed -i "s/\;listen = 127\.0\.0\.1\:9000/listen = \/tmp\/php5-fpm\.sock/g" /etc/p
 echo "Creating directory structures..."
 # Lets now create the base folders which we need
 mkdir /etc/turbine # The main application path.
-mkdir /etc/turbine/app # This is where the main web app code lives!
+mkdir /etc/turbine/webapp # This is where the main web app code lives!
 mkdir /etc/turbine/configs # Nginx VHOST NLB/Proxy configs will be stored here!
+mkdir /etc/turbine/configs/webapp # The main webGUI configuration for Nginx.
+mkdir /etc/turbine/configs/common # I've added this to hold the 'common' Laravel 4 nginx config.
 mkdir /var/log/turbine # Nginx VHOST access and error files will be stored here!
 
 # Now we will copy the application files over to the /etc/turbine/app directory
