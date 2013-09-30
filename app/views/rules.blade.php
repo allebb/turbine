@@ -34,7 +34,7 @@
             <div class="form-group">
                 <label for="target_address">Target server</label>
                 <input type="text" class="form-control" name="target_address" id="target_address" placeholder="eg. 192.168.0.12 or web1.internal.local:8080">
-                <p class="help-block">You can add multiple target servers (a network load-balanced set-up) after you create this initial rule using the 'edit' button below.</p>
+                <p class="help-block">You can add multiple target servers (a network load-balanced set-up) after you create this initial rule using the 'edit' button above.</p>
             </div>
             <div class="checkbox">
                 <label>
