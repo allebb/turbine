@@ -47,12 +47,11 @@ apt-get -y install nginx php5-fpm php5-curl php5-json php5-sqlite php5-mcrypt
 
 echo "Configuring Nginx..."
 # We now need to make some changes to the default nginx.conf file...
-echo '# Load the Turbine WebGUI configuration.' >> /etc/nginx/nginx.conf
 sed -i "s/include \/etc\/nginx\/sites-enabled\/\*/include \/etc\/turbine\/configs\/common\/turbine_nginx\.conf/g" /etc/nginx/nginx.conf
 
 echo "Configuring PHP-FPM for Nginx..."
 # Lets now configure PHP-FPM...
-sed -i "s/\;listen = 127\.0\.0\.1\:9000/listen = \/tmp\/php5-fpm\.sock/g" /etc/php5/fpm/pool.d/www.conf
+sed -i "s/\listen = 127\.0\.0\.1\:9000/listen = \/tmp\/php5-fpm\.sock/g" /etc/php5/fpm/pool.d/www.conf
 
 echo "Creating directory structures..."
 # Lets now create the base folders which we need
@@ -69,10 +68,12 @@ cp -fr /etc/turbine/webapp/scripts/common/* /etc/turbine/configs/common/
 
 # Now we set any required directory permissions as required.
 chmod -R 777 /etc/turbine/webapp/app/storage
+chmod -R 777 /etc/turbine/webapp/app/database/production.sqlite
 
 # We'll now add a new account for Nginx to run under and will also add that user to the sudoers list (as I can't think of a more secure way to do it at present)
 echo 'Adding nginx user to sudoers...'
 echo "$NGINX_USER ALL=NOPASSWD: /usr/bin/service nginx reload" > /etc/sudoers.d/turbine
+chmod 440 /etc/turbine/sudoers.d/turbine
 # Could also try: '/etc/init.d/nginx restart' if that doesn't work!
 
 # May have to use as a work around for other Linux OSes (that may now have an standard 'include' directory)..
