@@ -283,6 +283,16 @@ class NginxConfig
         $server_reload->execute();
     }
 
+    /**
+     * Delete the current physical configuration file.
+     * @param string $filename The full path and filename to the configuration file to delete.
+     * @return boolean
+     */
+    public function deleteConfig($filename)
+    {
+        return unlink($filename);
+    }
+
 }
 
 ?>

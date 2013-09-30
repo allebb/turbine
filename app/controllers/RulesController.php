@@ -126,4 +126,29 @@ class RulesController extends \BaseController
                         ->with('flash_info', 'New rule for ' . $update_rule->hostheader . ' has been updated successfully!');
     }
 
+    /**
+     * This handles the deletion of the deletion of the rule.
+     * @param type $id
+     */
+    public function destroy($id)
+    {
+        // Lets delete the record from the DB..
+        $delete_rule = Rule::find($id);
+
+        if ($delete_rule) {
+            // Delete the config file.
+            $config = new NginxConfig();
+            $config->setHostheaders($delete_rule->hostheader);
+            $config->readConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
+            if ($config->deleteConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf')) {
+                // We now delete the record from the DB...
+                $delete_rule->delete();
+            }
+            // Reload the service.
+            //$config->reloadConfig();
+        }
+        return Redirect::route('rules.index')
+                        ->with('flash_success', 'The rule for ' . json_decode($config->toJSON())->server_name . ' has been deleted successfully!');
+    }
+
 }

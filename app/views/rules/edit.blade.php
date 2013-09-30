@@ -91,7 +91,7 @@
 
                 <h2>Delete rule</h2>
                 <p>If you wish to delete this rule and stop routing to the backend server(s) press the delete button and confirm you wish to destroy this rule.</p>
-                {{ Form::open(array('route' => array('rules.destroy', $record->id), 'action' => 'DELETE', 'role' => 'form')) }}
+                {{ Form::open(array('route' => array('rules.destroy', $record->id), 'method' => 'DELETE', 'role' => 'form')) }}
                 {{ Form::submit('Delete rule', array('class' => 'btn btn-danger')) }}
                 {{ Form::close() }}
                 <p>&nbsp;</p>
