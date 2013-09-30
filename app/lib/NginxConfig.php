@@ -287,7 +287,7 @@ class NginxConfig
     public function reloadConfig()
     {
         $server_reload = new Executer;
-        $server_reload->setApplication('service nginx reload');
+        $server_reload->setApplication('sudo /usr/bin/service nginx reload');
         //$server_reload->execute();
     }
 

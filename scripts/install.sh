@@ -13,7 +13,7 @@ HOSTNAME=$(cat /etc/hostname)
 echo "Turbine Installer (v.$TURBINE_VERSION)"
 echo "===================================="
 echo .
-echo "Welcome to the Turbine installer, This installer will automatically install and"
+echo "Welcome to the Turbine installer, this installer will automatically install and"
 echo "configure the required packages and dependencies required to run the Turbine software."
 echo "It is recommended that you only install this on a clean server with no other"
 echo "web servers installed and running!"
@@ -48,13 +48,13 @@ fi
 
 # We now install the main packages required by the Turbine software.
 echo "Installing required packages..."
+apt-get update
 apt-get -y install nginx php5-fpm php5-curl php5-json php5-sqlite php5-mcrypt
 
 echo "Configuring Nginx..."
 # We now need to make some changes to the default nginx.conf file...
 echo '# Load the Turbine WebGUI configuration.' >> /etc/nginx/nginx.conf
-echo 'include /etc/turbine/configs/common/turbine_nginx.conf' >> /etc/nginx/nginx.conf
-sed -i "s/include \/etc\/nginx\/sites-enabled\/\*/include \/etc\/turbine\/configs\/\*\.enabled.conf/g" /etc/nginx/nginx.conf
+sed -i "s/include \/etc\/nginx\/sites-enabled\/\*/include \/etc\/turbine\/configs\/common\/turbine_nginx\.conf/g" /etc/nginx/nginx.conf
 
 echo "Configuring PHP-FPM for Nginx..."
 # Lets now configure PHP-FPM...
@@ -78,11 +78,16 @@ chmod -R 777 /etc/turbine/webapp/app/storage
 
 # We'll now add a new account for Nginx to run under and will also add that user to the sudoers list (as I can't think of a more secure way to do it at present)
 echo 'Adding nginx user to sudoers...'
-rm /etc/sudoers.new
-cp /etc/sudoers /etc/sudoers.new
-echo "$NGINX_USER ALL = NOPASSWD: service nginx reload" >> /etc/sudoers.new
-cp /etc/sudoers.new /etc/sudoers
-rm /etc/sudoer.new
+echo "$NGINX_USER ALL=NOPASSWD: /usr/bin/service nginx reload" > /etc/sudoers.d/turbine
+# Could also try: '/etc/init.d/nginx restart' if that doesn't work!
+
+# May have to use as a work around for other Linux OSes (that may now have an standard 'include' directory)..
+#rm /etc/sudoers.new
+#cp /etc/sudoers /etc/sudoers.new
+#echo "$NGINX_USER ALL=NOPASSWD: /usr/bin/service nginx reload" >> /etc/sudoers.new
+#cp /etc/sudoers.new /etc/sudoers
+#rm /etc/sudoer.new
+# Not sure if we need to restart the sudo service for the changes to take effect so I'll keep this here for now.
 /etc/init.d/sudo force-reload
 
 # We now start Nginx!
