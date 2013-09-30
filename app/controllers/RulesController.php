@@ -112,14 +112,39 @@ class RulesController extends \BaseController
      */
     public function update($id)
     {
+
         $update_rule = Rule::find($id);
-        $update_rule->hostheader = strtolower(Input::get('origin_address'));
-        //$create_rule->target_address = strtolower(Input::get('target_address')); // This will go directly into the nginx config file(s)
-        $update_rule->enabled = Input::get('enabled');
-        //$update_rule->nlb = false;
-        $update_rule->save();
+        if ($update_rule) {
+
+            // We now laod in the configuration file.
+            $existing_config = new NginxConfig();
+            $existing_config->setHostheaders($update_rule->hostheader);
+            $existing_config->readConfig(Setting::getSetting('nginxconfpath') . '/' . $existing_config->serverNameToFileName() . '.enabled.conf');
+            $targets = json_decode($existing_config->writeConfig()->toJSON());
+
+            $update_rule->hostheader = strtolower(Input::get('origin_address'));
+            //$update_rule->enabled = Input::get('enabled'); - Will add this as a feature in later versions of the software!
+            if ($update_rule->save()) {
+                // Lets grab each of the targets and iterate through the form changes to update each targets details:-
+                foreach ($targets->nlb_servers as $target) {
+                    $target_hash = md5($target->target);
+                    $existing_config->removeServerFromNLB($target->target);
+                    $existing_config->addServerToNLB(array(
+                        strtolower(Input::get('target_' . $target_hash)),
+                        array(
+                            'max_fails' => Input::get('maxfails_' . $target_hash),
+                            'fail_timeout' => Input::get('failtimeout_' . $target_hash),
+                            'weight' => Input::get('weight_' . $target_hash),
+                        )
+                    ));
+                }
+                $existing_config->writeConfig()->toFile(Setting::getSetting('nginxconfpath') . '/' . $existing_config->serverNameToFileName() . '.enabled.conf');
+            }
+            // We now reload the configuration file to ensure changes take affect.
+            $existing_config->reloadConfig();
+        }
         return Redirect::back()
-                        ->with('flash_info', 'New rule for ' . $update_rule->hostheader . ' has been updated successfully!');
+                        ->with('flash_info', 'The settings and targets for ' . $update_rule->hostheader . ' has been updated successfully!');
     }
 
     /**
