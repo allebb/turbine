@@ -53,7 +53,7 @@
                             <input type="text" class="form-control" name="weight_{{ md5($target->target) }}" id="weight_{{ md5($target->target) }}" value="{{ $target->weight }}">
                         </div>
                         <div class="col-lg-3">
-                            <a href="{{ URL::action('UtilController@getDeleteTarget', array($record->id, md5($target->target))) }}" type="button" class="btn btn-danger">Delete target</a>
+                            @if(count($targets->nlb_servers) > 1)<a href="{{ URL::action('UtilController@getDeleteTarget', array($record->id, md5($target->target))) }}" type="button" class="btn btn-danger">Delete target</a>@endif
                         </div>
                     </div>
                 </div>
