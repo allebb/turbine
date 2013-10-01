@@ -78,3 +78,8 @@ App::down(function() {
  */
 
 require app_path() . '/filters.php';
+
+/**
+ * Added a custom file to store our view composers.
+ */
+require app_path(). '/view_composer.php';
