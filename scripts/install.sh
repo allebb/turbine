@@ -73,10 +73,9 @@ chmod 777 /etc/turbine/webapp/app/database
 chmod 777 /etc/turbine/webapp/app/database/production.sqlite
 
 # We'll now add a new account for Nginx to run under and will also add that user to the sudoers list (as I can't think of a more secure way to do it at present)
-echo 'Adding nginx user to sudoers...'
+echo 'Adding Nginx user to sudoers...'
 echo "$NGINX_USER ALL=NOPASSWD: /usr/bin/service nginx reload" > /etc/sudoers.d/turbine
 chmod 0440 /etc/sudoers.d/turbine
-# Could also try: '/etc/init.d/nginx restart' if that doesn't work!
 
 # May have to use as a work around for other Linux OSes (that may now have an standard 'include' directory)..
 #rm /etc/sudoers.new
@@ -88,7 +87,7 @@ chmod 0440 /etc/sudoers.d/turbine
 /etc/init.d/sudo force-reload
 
 # We now start Nginx!
-echo "Starting Turbine (nginx)..."
+echo "Starting Turbine (nginx deamon)..."
 /etc/init.d/php5-fpm restart
 /etc/init.d/nginx restart
 
