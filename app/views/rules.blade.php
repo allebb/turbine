@@ -17,7 +17,7 @@
             <table class="table table-hover">
                 <tr><th>Host header</th><th>Enabled</th><th>Target(s)</th><th>Load-balanced</th><th></th></tr>
                 @foreach($rules as $rule)
-                <tr><td>{{{ $rule->hostheader }}}</td><td>@if($rule->enabled)<span class="glyphicon glyphicon-ok"></span>@endif</td><td>{{ $rule->targets }}</td><td>@if($rule->nlb)<span class="glyphicon glyphicon-ok"></span>@endif</td><td><a href="{{{ URL::route('rules.edit', $rule->id) }}}" class="btn btn-xs btn-info">Edit</a></td></tr>
+                <tr><td>{{{ $rule->hostheader }}}</td><td>@if($rule->enabled)<span class="glyphicon glyphicon-ok"></span>@endif</td><td>{{ $rule->targets }}</td><td>@if($rule->nlb)<span class="glyphicon glyphicon-ok"></span>@endif</td><td><a href="{{{ URL::route('rules.edit', $rule->id) }}}" class="btn btn-xs btn-info">Edit</a> <a href="{{ URL::route('rules.edit', $rule->id) }}#delete"  class="btn btn-xs btn-danger">Delete</a></td></tr>
                 @endforeach
             </table>
             @else

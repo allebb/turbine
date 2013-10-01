@@ -2,32 +2,31 @@
 
 use \Rule;
 use \Input;
-use Ballen\Executioner\Executer;
 
 class RulesController extends \BaseController
 {
 
     function __construct()
     {
+        // Require that the user is logged in!
         $this->beforeFilter('auth.basic');
-//$this->beforeFilter('csrf', array('on' => array('update')));
+        // We want to enable CSFR protection on both the 'update', 'store' and 'destroy' actions.
+        $this->beforeFilter('csrf', array('on' => array('update', 'store', 'destroy')));
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * Displays current rules and their target servers etc.
      */
     public function index()
     {
         $rules = Rule::all();
 
-// Lets load in each of the rules and get the target infomation for each..
+        // Lets load in each of the rules and get the target infomation for each..
         $combined_list = array();
         foreach ($rules as $rule) {
             $combined = array();
 
-// Now we load in each config file...
+            // Now we load in each config file...
             $reader = new NginxConfig();
             $reader->setHostheaders($rule->hostheader);
             $reader->readConfig(Setting::getSetting('nginxconfpath') . '/' . $reader->serverNameToFileName() . '.enabled.conf');
@@ -57,9 +56,13 @@ class RulesController extends \BaseController
                         ->with('rules', json_decode(json_encode($combined_list)));
     }
 
+    /**
+     * Handles the creation of a new rule. (POST /rule)
+     * @return type
+     */
     public function store()
     {
-// we'll first validate the data before continueing...
+        // we'll first validate the data before continueing...
         $validator = Validator::make(
                         array(
                     'origin address' => Input::get('origin_address'),
@@ -104,21 +107,20 @@ class RulesController extends \BaseController
     }
 
     /**
-     * Lets display the edit form... GET /rules/{id}/edit
+     * Display the 'edit' rule form (GET /rules/{id}/edit)
+     * @param int $id The ID of the rule of which is to be edited.
      */
     public function edit($id)
     {
         $rule = Rule::find($id);
 
         if ($rule) {
-// Load in the current configuration
+            // Load in the current configuration
             $config = new NginxConfig();
             $config->setHostheaders($rule->hostheader);
             $config->readConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
             $targets = $config->writeConfig()->toJSON();
         }
-
-//die(var_dump($targets));
         return View::make('rules.edit')
                         ->with('title', 'Edit rules') // Customise the HTML page title per controller 'action'.
                         ->with('record', $rule)
@@ -126,7 +128,8 @@ class RulesController extends \BaseController
     }
 
     /**
-     * Lets store the changes and manipulate config files etc. PUT/PATCH /rules/{id}
+     * Stores the changes and manipulate config files etc. (PUT/PATCH /rules/{id})
+     * @param int $id The ID of the rule of which to update.
      */
     public function update($id)
     {
@@ -134,16 +137,16 @@ class RulesController extends \BaseController
         $update_rule = Rule::find($id);
         if ($update_rule) {
 
-// We now laod in the configuration file.
+            // We now laod in the configuration file.
             $existing_config = new NginxConfig();
             $existing_config->setHostheaders($update_rule->hostheader);
             $existing_config->readConfig(Setting::getSetting('nginxconfpath') . '/' . $existing_config->serverNameToFileName() . '.enabled.conf');
             $targets = json_decode($existing_config->writeConfig()->toJSON());
 
             $update_rule->hostheader = strtolower(Input::get('origin_address'));
-//$update_rule->enabled = Input::get('enabled'); - Will add this as a feature in later versions of the software!
+            //$update_rule->enabled = Input::get('enabled'); - Will add this as a feature in later versions of the software!
             if ($update_rule->save()) {
-// Lets grab each of the targets and iterate through the form changes to update each targets details:-
+                // Lets grab each of the targets and iterate through the form changes to update each targets details:-
                 foreach ($targets->nlb_servers as $target) {
                     $target_hash = md5($target->target);
                     $existing_config->removeServerFromNLB($target->target);
@@ -158,7 +161,7 @@ class RulesController extends \BaseController
                 }
                 $existing_config->writeConfig()->toFile(Setting::getSetting('nginxconfpath') . '/' . $existing_config->serverNameToFileName() . '.enabled.conf');
             }
-// We now reload the configuration file to ensure changes take affect.
+            // We now reload the configuration file to ensure changes take immediate affect.
             $existing_config->reloadConfig();
         }
         return Redirect::back()
@@ -166,24 +169,22 @@ class RulesController extends \BaseController
     }
 
     /**
-     * This handles the deletion of the deletion of the rule.
-     * @param type $id
+     * This handles the deletion of the deletion of the rule. (DELETE /rules/{id})
+     * @param int $id The ID of the rule to delete.
      */
     public function destroy($id)
     {
-// Lets delete the record from the DB..
+        // Lets delete the record from the DB..
         $delete_rule = Rule::find($id);
-
         if ($delete_rule) {
-// Delete the config file.
+            // Delete the config file.
             $config = new NginxConfig();
             $config->setHostheaders($delete_rule->hostheader);
             $config->readConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
             if ($config->deleteConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf')) {
-// We now delete the record from the DB...
+                // We now delete the record from the DB...
                 $delete_rule->delete();
             }
-// Reload the service.
             $config->reloadConfig();
         }
         return Redirect::route('rules.index')

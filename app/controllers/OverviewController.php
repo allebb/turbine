@@ -6,13 +6,15 @@ class OverviewController extends BaseController
     function __construct()
     {
         $this->beforeFilter('auth.basic');
-        $this->beforeFilter('csrf', array('on' => 'store'));
     }
 
+    /**
+     * Lets just display some standard infomation about the server.
+     */
     public function index()
     {
 
-        // Lets get the total number of rules from the DB for the info splahs.
+        // Lets get the total number of rules from the DB for the info splash.
         $total_rules = Rule::all()->count();
         // Lets get the total number of NLB rules from the DB for the info splash.
         $total_nlb_rules = Rule::where('nlb', true)->count();

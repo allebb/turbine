@@ -86,9 +86,9 @@
                         </div>
                     </div>
                 </div>
-
                 {{ Form::close() }}
-
+                <p>&nbsp;</p>
+                <a name="delete"></a>
                 <h2>Delete rule</h2>
                 <p>If you wish to delete this rule and stop routing to the backend server(s) press the delete button and confirm you wish to destroy this rule.</p>
                 {{ Form::open(array('route' => array('rules.destroy', $record->id), 'method' => 'DELETE', 'role' => 'form')) }}

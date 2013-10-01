@@ -3,6 +3,19 @@
 class UtilController extends \BaseController
 {
 
+    function __construct()
+    {
+        // Require that the user is logged in!
+        $this->beforeFilter('auth.basic');
+        // We want to enable CSFR protection on both of our methods here!
+        $this->beforeFilter('csrf', array('on' => array('postAddTarget')));
+    }
+
+    /**
+     * Handles the deletion of proxy/nlb target servers.
+     * @param int $id The rule ID of which to remove the target server address from.
+     * @param string $target_hash An MD5 hash of the target server address.
+     */
     public function getDeleteTarget($id, $target_hash)
     {
         // We now load in the target's nginx host file and delete the target that's name matches the md5 hash.
@@ -28,9 +41,12 @@ class UtilController extends \BaseController
                         ->with('flash_success', 'Target ' . strtolower(Input::get('target')) . ' has been successfully deleted from this rule!');
     }
 
+    /**
+     * Handles adding a new target to an existing rule.
+     * @param int $id The ID of the rule of which to add the new target too.
+     */
     public function postAddTarget($id)
     {
-        // The post data will enable us to add the new target
         // we'll first validate the data before continueing...
         $validator = Validator::make(
                         array(

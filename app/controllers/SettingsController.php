@@ -8,14 +8,14 @@ class SettingsController extends \BaseController
 
     function __construct()
     {
+        // Require that the user is logged in!
         $this->beforeFilter('auth.basic');
+        // We want to enable CSFR protection on both the 'store' action.
         $this->beforeFilter('csrf', array('on' => 'store'));
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * Display all the current 'user' system settings and a form to enable them to make changes to them.
      */
     public function index()
     {
@@ -28,8 +28,6 @@ class SettingsController extends \BaseController
     /**
      * Store a newly created resource in storage.
      * ...but in our case are we are updating a whole load of settings this is really the 'update' action.
-     *
-     * @return Response
      */
     public function store()
     {
