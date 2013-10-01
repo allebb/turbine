@@ -31,24 +31,45 @@ class UtilController extends \BaseController
     public function postAddTarget($id)
     {
         // The post data will enable us to add the new target
-        //$target, $max_fails, $fail_timeout, $weight
-        $rule = Rule::find($id);
-        if ($rule) {
-            $config = new NginxConfig();
-            $config->setHostheaders($rule->hostheader);
-            $config->readConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
-            $config->addServerToNLB(array(
-                strtolower(Input::get('target')), array(
-                    'max_fails' => Input::get('maxfails'),
-                    'fail_timeout' => Input::get('failtimeout'),
-                    'weight' => Input::get('weight'),
-                )
-            ));
-            $config->writeConfig()->toFile(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
-            $config->reloadConfig();
+        // we'll first validate the data before continueing...
+        $validator = Validator::make(
+                        array(
+                    'target address' => Input::get('target'),
+                    'max fails' => Input::get('maxfails'),
+                    'fail timeout' => Input::get('failtimeout'),
+                    'weight' => Input::get('weight'))
+                        , array(
+                    'target address' => array('required'),
+                    'max fails' => array('integer', 'required'),
+                    'fail timeout' => array('alpha_num', 'required'),
+                    'weight' => array('numeric', 'between:1, 100'),
+                        )
+        );
+
+        if ($validator->passes()) {
+            $rule = Rule::find($id);
+            if ($rule) {
+                $config = new NginxConfig();
+                $config->setHostheaders($rule->hostheader);
+                $config->readConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
+                $config->addServerToNLB(array(
+                    strtolower(Input::get('target')), array(
+                        'max_fails' => Input::get('maxfails'),
+                        'fail_timeout' => Input::get('failtimeout'),
+                        'weight' => Input::get('weight'),
+                    )
+                ));
+                $config->writeConfig()->toFile(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
+                $config->reloadConfig();
+            }
+            return Redirect::back()
+                            ->with('flash_success', 'New target ' . strtolower(Input::get('target')) . ' has been added!');
+        } else {
+            $errors = $validator->messages();
+            return Redirect::back()
+                            ->withInput()
+                            ->with('flash_error', 'The following validation errors occured, please correct them and try again:<br /><br /> * ' . implode('<br /> * ', $errors->all()));
         }
-        return Redirect::back()
-                        ->with('flash_success', 'New target ' . strtolower(Input::get('target')) . ' has been added!');
     }
 
 }
