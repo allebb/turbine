@@ -48,7 +48,7 @@ apt-get -y install nginx php5-fpm php5-curl php5-json php5-sqlite php5-mcrypt
 echo "Configuring Nginx..."
 # We now need to make some changes to the default nginx.conf file...
 sed -i "s/include \/etc\/nginx\/sites-enabled\/\*/include \/etc\/turbine\/configs\/common\/turbine_nginx\.conf/g" /etc/nginx/nginx.conf
-sed -i "s/\; server_tokens off/server_tokens off/g" /etc/nginx/nginx.conf
+sed -i "s/\# server_tokens off/server_tokens off/g" /etc/nginx/nginx.conf
 
 echo "Configuring PHP-FPM for Nginx..."
 # Lets now configure PHP-FPM...

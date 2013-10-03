@@ -141,8 +141,9 @@ class RulesController extends \BaseController
             // the configuration file first and then proceed to save the changes!
             if (strtolower(Input::get('origin_address')) != $update_rule->hostheader) {
                 $config_object = new NginxConfig();
+                $new_config_object = new NginxConfig();
                 $config_file = Setting::getSetting('nginxconfpath') . '/' . $config_object->setHostheaders(strtolower(Input::get('origin_address')))->serverNameToFileName() . '.enabled.conf';
-                rename(Setting::getSetting('nginxconfpath') . '/' . (new NginxConfig())->setHostheaders(strtolower($update_rule->hostheader))->serverNameToFileName() . '.enabled.conf', $config_file);
+                rename(Setting::getSetting('nginxconfpath') . '/' . $new_config_object->setHostheaders(strtolower($update_rule->hostheader))->serverNameToFileName() . '.enabled.conf', $config_file);
             } else {
                 $config_object = new NginxConfig();
                 $config_file = Setting::getSetting('nginxconfpath') . '/' . $config_object->setHostheaders(strtolower($update_rule->hostheader))->serverNameToFileName() . '.enabled.conf';
