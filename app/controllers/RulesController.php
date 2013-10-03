@@ -140,10 +140,12 @@ class RulesController extends \BaseController
             // We need to check if the origin address has changed and if so rename (move)
             // the configuration file first and then proceed to save the changes!
             if (strtolower(Input::get('origin_address')) != $update_rule->hostheader) {
-                $config_file = Setting::getSetting('nginxconfpath') . '/' . (new NginxConfig())->setHostheaders(strtolower(Input::get('origin_address')))->serverNameToFileName() . '.enabled.conf';
+                $config_object = new NginxConfig();
+                $config_file = Setting::getSetting('nginxconfpath') . '/' . $config_object->setHostheaders(strtolower(Input::get('origin_address')))->serverNameToFileName() . '.enabled.conf';
                 rename(Setting::getSetting('nginxconfpath') . '/' . (new NginxConfig())->setHostheaders(strtolower($update_rule->hostheader))->serverNameToFileName() . '.enabled.conf', $config_file);
             } else {
-                $config_file = Setting::getSetting('nginxconfpath') . '/' . (new NginxConfig())->setHostheaders(strtolower($update_rule->hostheader))->serverNameToFileName() . '.enabled.conf';
+                $config_object = new NginxConfig();
+                $config_file = Setting::getSetting('nginxconfpath') . '/' . $config_object->setHostheaders(strtolower($update_rule->hostheader))->serverNameToFileName() . '.enabled.conf';
             }
 
             // We now laod in the configuration file.
