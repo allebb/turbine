@@ -137,10 +137,19 @@ class RulesController extends \BaseController
         $update_rule = Rule::find($id);
         if ($update_rule) {
 
+            // We need to check if the origin address has changed and if so rename (move)
+            // the configuration file first and then proceed to save the changes!
+            if (strtolower(Input::get('origin_address')) != $update_rule->hostheader) {
+                $config_file = Setting::getSetting('nginxconfpath') . '/' . (new NginxConfig())->setHostheaders(strtolower(Input::get('origin_address')))->serverNameToFileName() . '.enabled.conf';
+                rename(Setting::getSetting('nginxconfpath') . '/' . (new NginxConfig())->setHostheaders(strtolower($update_rule->hostheader))->serverNameToFileName() . '.enabled.conf', $config_file);
+            } else {
+                $config_file = Setting::getSetting('nginxconfpath') . '/' . (new NginxConfig())->setHostheaders(strtolower($update_rule->hostheader))->serverNameToFileName() . '.enabled.conf';
+            }
+
             // We now laod in the configuration file.
             $existing_config = new NginxConfig();
             $existing_config->setHostheaders($update_rule->hostheader);
-            $existing_config->readConfig(Setting::getSetting('nginxconfpath') . '/' . $existing_config->serverNameToFileName() . '.enabled.conf');
+            $existing_config->readConfig($config_file);
             $targets = json_decode($existing_config->writeConfig()->toJSON());
 
             $update_rule->hostheader = strtolower(Input::get('origin_address'));
