@@ -69,7 +69,7 @@ class RulesController extends \BaseController
                     'target address' => Input::get('target_address'),
                         )
                         , array(
-                    'origin address' => array('required'),
+                    'origin address' => array('required', 'unique:rules,hostheader'),
                     'target address' => array('required'),
                         )
         );
