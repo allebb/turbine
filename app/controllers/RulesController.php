@@ -158,8 +158,10 @@ class RulesController extends \BaseController
             $update_rule->hostheader = strtolower(Input::get('origin_address'));
             //$update_rule->enabled = Input::get('enabled'); - Will add this as a feature in later versions of the software!
             if ($update_rule->save()) {
+                $no_targets = 0;
                 // Lets grab each of the targets and iterate through the form changes to update each targets details:-
                 foreach ($targets->nlb_servers as $target) {
+
                     $target_hash = md5($target->target);
                     $existing_config->removeServerFromNLB($target->target);
                     $existing_config->addServerToNLB(array(
@@ -170,8 +172,15 @@ class RulesController extends \BaseController
                             'weight' => Input::get('weight_' . $target_hash),
                         )
                     ));
+                    $no_targets++;
                 }
                 $existing_config->writeConfig()->toFile(Setting::getSetting('nginxconfpath') . '/' . $existing_config->serverNameToFileName() . '.enabled.conf');
+            }
+
+            if ($no_targets > 1) {
+                // We now update record to indicate that it is a NLB setup if there are more than one target associated to the rule!
+                $update_rule->nlb = true;
+                $update_rule->save();
             }
             // We now reload the configuration file to ensure changes take immediate affect.
             $existing_config->reloadConfig();
