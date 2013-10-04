@@ -56,27 +56,27 @@
             {{ Form::close() }}
 
             <p>&nbsp;</p>
+            <h4>Add new target</h4>
             {{ Form::open(array('action' => array('UtilController@postAddTarget', $record->id), 'method' => 'POST', 'role' => 'form')) }}
-            <div class="form-group">
-                <h4>Add new target</h4>
-                <div class="row">
-                    <div class="col-lg-3">
+            <table class="table table-bordered">
+                <tr>
+                    <td>
                         <input type="text" class="form-control" name="target" id="target" placeholder="eg. backend.example.com or 192.168.0.3:8080">
-                    </div>
-                    <div class="col-lg-1">
+                    </td>
+                    <td>
                         <input type="text" class="form-control" name="maxfails" id="maxfails" placeholder="eg. {{ Setting::getSetting('maxfails') }}">
-                    </div>
-                    <div class="col-lg-1">
+                    </td>
+                    <td>
                         <input type="text" class="form-control" name="failtimeout" id="failtimeout" placeholder="eg. {{ Setting::getSetting('failtimeout') }}">
-                    </div>
-                    <div class="col-lg-1">
+                    </td>
+                    <td>
                         <input type="text" class="form-control" name="weight" id="weight" placeholder="eg. 1">
-                    </div>
-                    <div class="col-lg-3">
-                        {{ Form::submit('Add target', array('class' => 'btn btn-default')) }}
-                    </div>
-                </div>
-            </div>
+                    </td>
+                    <td>
+                        {{ Form::submit('Add target', array('class' => 'btn btn-primary')) }}
+                    </td>
+                </tr>
+            </table>
             {{ Form::close() }}
             <p>&nbsp;</p>
             <a name="delete"></a>
