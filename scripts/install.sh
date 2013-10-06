@@ -48,7 +48,7 @@ apt-get -y install nginx php5-fpm php5-curl php5-json php5-sqlite php5-mcrypt
 echo "Configuring Nginx..."
 # We now need to make some changes to the default nginx.conf file...
 sed -i "s/include \/etc\/nginx\/sites-enabled\/\*/include \/etc\/turbine\/configs\/common\/turbine_nginx\.conf/g" /etc/nginx/nginx.conf
-sed -i "s/\# server_tokens off/server_tokens off/g" /etc/nginx/nginx.conf
+sed -i "s/# server_tokens off\;/server_tokens off\;/g" /etc/nginx/nginx.conf
 
 echo "Configuring PHP-FPM for Nginx..."
 # Lets now configure PHP-FPM...
@@ -66,6 +66,7 @@ mkdir /var/log/turbine # Nginx VHOST access and error files will be stored here!
 # Now we will copy the application files over to the /etc/turbine/app directory (we'll pull latest from GitHub).
 cp -fr $EXTRACTED_FILES/* /etc/turbine/webapp/
 cp -fr /etc/turbine/webapp/scripts/common/* /etc/turbine/configs/common/
+cp -fr /etc/turbine/webapp/scripts/static/* /etc/turbine/configs/static/
 
 # Now we set any required directory permissions as required.
 chmod -R 777 /etc/turbine/webapp/app/storage
