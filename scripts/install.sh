@@ -66,7 +66,7 @@ mkdir /var/log/turbine # Nginx VHOST access and error files will be stored here!
 # Now we will copy the application files over to the /etc/turbine/app directory (we'll pull latest from GitHub).
 cp -fr $EXTRACTED_FILES/* /etc/turbine/webapp/
 cp -fr /etc/turbine/webapp/scripts/common/* /etc/turbine/configs/common/
-cp -fr /etc/turbine/webapp/scripts/static/* /etc/turbine/configs/static/
+cp -fr /etc/turbine/webapp/scripts/static/* /etc/turbine/static/
 mv /etc/turbine/configs/common/turbine_default.enabled.conf /etc/turbine/configs/turbine_default.enabled.conf
 
 # Now we set any required directory permissions as required.
