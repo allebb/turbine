@@ -67,6 +67,7 @@ mkdir /var/log/turbine # Nginx VHOST access and error files will be stored here!
 cp -fr $EXTRACTED_FILES/* /etc/turbine/webapp/
 cp -fr /etc/turbine/webapp/scripts/common/* /etc/turbine/configs/common/
 cp -fr /etc/turbine/webapp/scripts/static/* /etc/turbine/configs/static/
+mv /etc/turbine/configs/common/turbine_default.enabled.conf /etc/turbine/configs/turbine_default.enabled.conf
 
 # Now we set any required directory permissions as required.
 chmod -R 777 /etc/turbine/webapp/app/storage
