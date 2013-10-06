@@ -228,6 +228,9 @@ class NginxConfig
                 ->addConfigLine('proxy_set_header Host $host;', 2)
                 ->addConfigLine('proxy_set_header X-Real-IP $remote_addr;', 2)
                 ->addConfigLine('proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;', 2)
+                // This will also be added functionality in a later version of Turbine, as a header will advise on the upstream server that handled the request.
+                ->addConfigLine('add_header  X-Upstream  $upstream_addr;', 2)
+                ->addConfigLine('proxy_pass_header Server;')
                 ->addConfigLine('proxy_pass  http://' . $this->serverNameToFileName() . '_nlb_backend;', 2)
                 ->addConfigLine('} # EoPFB', 1)
                 ->addBlankConfigLine()
