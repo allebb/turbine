@@ -234,6 +234,11 @@ class NginxConfig
                 ->addConfigLine('proxy_pass  http://' . $this->serverNameToFileName() . '_nlb_backend;', 2)
                 ->addConfigLine('} # EoPFB', 1)
                 ->addBlankConfigLine()
+                ->addConfigLine('error_page 502 /502.html;', 1)
+                ->addConfigLine('location = /502.html {', 1)
+                ->addConfigLine('root /etc/turbine/static;', 2)
+                ->addConfigLine('}', 1)
+                ->addBlankConfigLine()
                 ->addConfigLine('client_max_body_size 64M;', 1)
                 ->addBlankConfigLine()
                 ->addConfigLine('} #EoSB');
