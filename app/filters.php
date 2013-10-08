@@ -42,6 +42,13 @@ Route::filter('auth.basic', function() {
             return Auth::basic('username');
         });
 
+// I've basically cloned the above 'BASIC AUTH' filter! - Using onceBasic() instead though so not to set an auth cookie, much better for APIs!
+Route::filter('auth.api', function() {
+            return Auth::onceBasic('username');
+        }); #
+
+
+
 /*
   |--------------------------------------------------------------------------
   | Guest Filter

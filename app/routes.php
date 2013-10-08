@@ -1,6 +1,8 @@
 <?php
 
-// Application routes
+/**
+ * Standard application routes
+ */
 Route::resource('/', 'OverviewController', array('only' => array('index')));
 Route::resource('rules', 'RulesController');
 Route::resource('settings', 'SettingsController', array('only' => array('index', 'store')));
@@ -10,3 +12,17 @@ Route::get('logout', array('as' => 'logout', function() {
         return Redirect::route('.index');
     }));
 Route::controller('action', 'UtilController');
+
+/**
+ * API route grouping
+ */
+Route::group(array('prefix' => 'api/'), function() {
+            Route::resource('rule', 'api\RulesController', array(
+                'only' => array(
+                    'index',
+                    'show',
+                    'store',
+                    'update',
+                    'destroy',
+            )));
+        });
