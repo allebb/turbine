@@ -11,6 +11,7 @@ Route::get('/', array('as' => '.index', function() {
         return Redirect::route('rules.index');
     }));
 Route::resource('rules', 'RulesController');
+Route::controller('password', 'PasswordController');
 Route::resource('settings', 'SettingsController', array('only' => array('index', 'store')));
 Route::controller('action', 'UtilController');
 Route::get('logout', array('as' => 'logout', function() {
