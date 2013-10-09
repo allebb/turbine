@@ -3,7 +3,13 @@
 /**
  * Standard application routes
  */
-Route::resource('/', 'OverviewController', array('only' => array('index')));
+Route::get('/', array('as' => '.index', function() {
+        // Decided to remove the redundent 'OverviewController' as there was little point of using it!
+        // Instead I am now using the Redirect::route to redirect to the rules controller.
+        // Note that I've named this route '.index' as this was the generated controller name originally.. this stops
+        // issues with the existing template rules which are trying to generate URL's from the route names..
+        return Redirect::route('rules.index');
+    }));
 Route::resource('rules', 'RulesController');
 Route::resource('settings', 'SettingsController', array('only' => array('index', 'store')));
 Route::controller('action', 'UtilController');
@@ -12,7 +18,7 @@ Route::get('logout', array('as' => 'logout', function() {
         Auth::logout();
         return Redirect::route('.index');
     }));
-    
+
 /**
  * API route grouping
  */
