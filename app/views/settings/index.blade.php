@@ -24,6 +24,11 @@
         <p>You are recommended from time to time to reset your 'admin' password, this password enables you to login to Turbine as well as access the API remotely.</p>
         {{ Form::open(array('url' => 'password/reset', 'action' => 'POST', 'role' => 'form')) }}
         <div class="form-group">
+            <label for="new_password">Current password</label>
+            <input type="password" class="form-control" name="current_password" id="new_password">
+            <p class="help-block">To reset your password you must first provide your existing 'admin' password.</p>
+        </div>
+        <div class="form-group">
             <label for="new_password">New password</label>
             <input type="password" class="form-control" name="new_password" id="new_password">
             <p class="help-block">Enter your new password that you'd like to use and confirm it below if you wish you make changes.</p>
