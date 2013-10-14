@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-    @include('partials/head')
-    <body>
-        @include('partials/navbar')
-
-        <!-- Start of content -->
-        <div class="container theme-showcase">
-            <div class="page-header">
-                <h1>Edit rule</h1>
-            </div>
-            @include('partials/flashmsgs')
+@extends('layout')
+@section('content')
             @if($record)
             {{ Form::open(array('route' => array('rules.update', $record->id), 'method' => 'PUT', 'role' => 'form')) }}
             <div class="form-group">
@@ -91,11 +81,4 @@
             <p>Sorry no rule with that UID exists, please return to the <a href="{{ URL::route('rules.index') }}">rules page</a>!</p>
             <p>&nbsp;</p>
             @endif
-
-            @include('partials/copyright')
-        </div>
-        <!-- End content -->
-
-        @include('partials/footer')
-    </body>
-</html>
+@stop

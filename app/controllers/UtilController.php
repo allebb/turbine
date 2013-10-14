@@ -88,6 +88,18 @@ class UtilController extends \BaseController
         }
     }
 
+    /**
+     * Logout the user...
+     * Although we're using HTTP BASIC auth for Turbine we'll attempt to kill all sessions and then advise the user
+     * to close their browser to complete the logout process!
+     * @return View
+     */
+    public function getLogout()
+    {
+        Auth::logout();
+        return View::make('logout.index')->with('title', 'Logging out...');
+    }
+
 }
 
 ?>

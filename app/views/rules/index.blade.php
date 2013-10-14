@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-    @include('partials/head')
-    <body>
-        @include('partials/navbar')
+@extends('layout')
 
-        <!-- Start of content -->
-        <div class="container theme-showcase">
-
-            <div class="page-header">
-                <h1>Rules</h1>
-            </div>
-            @include('partials/flashmsgs')
-
+@section('content')
             <h2>Existing rules</h2>
             @if($total_rules > 0)
             <table class="table table-hover">
@@ -43,12 +32,5 @@
             </div>
             {{ Form::submit('Create rule', array('class' => 'btn btn-primary')) }}
             {{ Form::close() }}
-        </form>
-        <p>&nbsp;</p>
-        @include('partials/copyright')
-    </div>
-    <!-- End content -->
-
-    @include('partials/footer')
-</body>
-</html>
+</form>
+@stop

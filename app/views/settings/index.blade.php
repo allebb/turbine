@@ -1,23 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-    @include('partials/head')
-    <body>
-        @include('partials/navbar')
-
-        <!-- Start of content -->
-        <div class="container theme-showcase">
-
-            <div class="page-header">
-                <h1>Settings</h1>
-            </div>
-
-            <a name="updates"></a>
+@extends('layout')
+@section('content')
             <h2>Up-to-date</h2>
             <p class="text-success">You are currently running the latest version (<strong>X</strong>) of Turbine!</p>
             <p class="text-danger">There is an update (<strong>X</strong>) avaliable for Turbine, you're currently running version (<strong>X</strong>) we recommend that all users upgrade at their earliest convenience.</p>
             <p>&nbsp;</p>
-            @include('partials/flashmsgs')
-            <a name="settings"></a>
             <h2>Application settings</h2>
             {{ Form::open(array('route' => 'settings.store', 'action' => 'POST', 'role' => 'form')) }}
             @foreach($settings as $setting)
@@ -49,10 +35,4 @@
         {{ Form::submit('Update password', array('class' => 'btn btn-default')) }}
         {{ Form::close() }}
         <p>&nbsp;</p>
-        @include('partials/copyright')
-    </div>
-    <!-- End content -->
-
-    @include('partials/footer')
-</body>
-</html>
+@stop
