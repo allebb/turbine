@@ -34,7 +34,7 @@ class SettingsController extends \BaseController
 
         return View::make('settings.index')
                         ->with('title', 'Settings')
-                        ->with('updateinfo', $update_service)
+                        ->with('versioninfo', $update_service)
                         ->with('settings', $settings);
     }
 
