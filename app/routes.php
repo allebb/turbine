@@ -15,9 +15,7 @@ Route::controller('password', 'PasswordController');
 Route::resource('settings', 'SettingsController', array('only' => array('index', 'store')));
 Route::controller('action', 'UtilController');
 Route::get('logout', array('as' => 'logout', function() {
-        Session::flush();
-        Auth::logout();
-        return Redirect::route('.index');
+        return View::make('logout.index');
     }));
 
 /**

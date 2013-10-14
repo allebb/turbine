@@ -50,7 +50,7 @@ class RulesController extends \BaseController
             $combined_list[] = $combined;
         }
 
-        return View::make('rules')
+        return View::make('rules.index')
                         ->with('title', 'Rules') // Customise the HTML page title per controller 'action'.
                         ->with('total_rules', $rules->count())
                         ->with('rules', json_decode(json_encode($combined_list)));

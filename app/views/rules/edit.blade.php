@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-    @include('includes/head')
+    @include('partials/head')
     <body>
-        @include('includes/navbar')
+        @include('partials/navbar')
 
         <!-- Start of content -->
         <div class="container theme-showcase">
             <div class="page-header">
                 <h1>Edit rule</h1>
             </div>
-            @include('includes/flashmsgs')
+            @include('partials/flashmsgs')
             @if($record)
             {{ Form::open(array('route' => array('rules.update', $record->id), 'method' => 'PUT', 'role' => 'form')) }}
             <div class="form-group">
@@ -92,10 +92,10 @@
             <p>&nbsp;</p>
             @endif
 
-            @include('includes/copyright')
+            @include('partials/copyright')
         </div>
         <!-- End content -->
 
-        @include('includes/footer')
+        @include('partials/footer')
     </body>
 </html>

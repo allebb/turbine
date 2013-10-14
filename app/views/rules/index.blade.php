@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-    @include('includes/head')
+    @include('partials/head')
     <body>
-        @include('includes/navbar')
+        @include('partials/navbar')
 
         <!-- Start of content -->
         <div class="container theme-showcase">
@@ -10,7 +10,7 @@
             <div class="page-header">
                 <h1>Rules</h1>
             </div>
-            @include('includes/flashmsgs')
+            @include('partials/flashmsgs')
 
             <h2>Existing rules</h2>
             @if($total_rules > 0)
@@ -45,10 +45,10 @@
             {{ Form::close() }}
         </form>
         <p>&nbsp;</p>
-        @include('includes/copyright')
+        @include('partials/copyright')
     </div>
     <!-- End content -->
 
-    @include('includes/footer')
+    @include('partials/footer')
 </body>
 </html>
