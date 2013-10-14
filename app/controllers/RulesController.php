@@ -234,7 +234,7 @@ class RulesController extends \BaseController
         }
         // As this method is called using both AJAX and the FORM on the Edit page, we only want to respond simply to the AJAX request otherwise we'll get Server 500 errors in our Javascript Console!
         if (Request::ajax())
-            return Response::make(array('deleted' => true), 200); // Request was ajax so we send a simple response instead!
+            return Response::json(array('deleted' => true), 200); // Request was ajax so we send a simple response instead!
         return Redirect::route('rules.index')
                         ->with('flash_success', 'The rule for ' . json_decode($config->toJSON())->server_name . ' has been deleted successfully!');
     }
