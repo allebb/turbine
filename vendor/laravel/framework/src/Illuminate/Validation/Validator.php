@@ -2,10 +2,12 @@
 
 use Closure;
 use DateTime;
+use Illuminate\Support\Fluent;
 use Illuminate\Support\MessageBag;
 use Illuminate\Container\Container;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Support\Contracts\MessageProviderInterface;
 
 class Validator implements MessageProviderInterface {
@@ -13,7 +15,7 @@ class Validator implements MessageProviderInterface {
 	/**
 	 * The Translator implementation.
 	 *
-	 * @var Symfony\Component\Translation\TranslatorInterface
+	 * @var \Symfony\Component\Translation\TranslatorInterface
 	 */
 	protected $translator;
 
@@ -161,6 +163,43 @@ class Validator implements MessageProviderInterface {
 	}
 
 	/**
+	 * Add conditions to a given field based on a Closure.
+	 *
+	 * @param  string  $attribute
+	 * @param  string|array  $rules
+	 * @param  callable  $callback
+	 * @return void
+	 */
+	public function sometimes($attribute, $rules, $callback)
+	{
+		$payload = new Fluent(array_merge($this->data, $this->files));
+
+		if (call_user_func($callback, $payload))
+		{
+			foreach ((array) $attribute as $key)
+			{
+				$this->mergeRules($key, $rules);
+			}
+		}
+	}
+
+	/**
+	 * Merge additional rules into a given attribute.
+	 *
+	 * @param  string  $attribute
+	 * @param  string|array  $rules
+	 * @return void
+	 */
+	protected function mergeRules($attribute, $rules)
+	{
+		$current = array_get($this->rules, $attribute, array());
+
+		$merge = head($this->explodeRules(array($rules)));
+
+		$this->rules[$attribute] = array_merge($current, $merge);
+	}
+
+	/**
 	 * Determine if the data passes the validation rules.
 	 *
 	 * @return bool
@@ -202,6 +241,8 @@ class Validator implements MessageProviderInterface {
 	 */
 	protected function validate($attribute, $rule)
 	{
+		if (trim($rule) == '') return;
+
 		list($rule, $parameters) = $this->parseRule($rule);
 
 		// We will get the value for the given attribute from the array of data and then
@@ -443,7 +484,7 @@ class Validator implements MessageProviderInterface {
 	{
 		$other = $parameters[0];
 
-		return isset($this->data[$other]) and $value == $this->data[$other];
+		return (isset($this->data[$other]) and $value == $this->data[$other]);
 	}
 
 	/**
@@ -474,7 +515,7 @@ class Validator implements MessageProviderInterface {
 	{
 		$acceptable = array('yes', 'on', 1);
 
-		return $this->validateRequired($attribute, $value) and in_array($value, $acceptable);
+		return ($this->validateRequired($attribute, $value) and in_array($value, $acceptable));
 	}
 
 	/**
@@ -592,6 +633,8 @@ class Validator implements MessageProviderInterface {
 	 */
 	protected function validateMax($attribute, $value, $parameters)
 	{
+		if ($value instanceof UploadedFile and ! $value->isValid()) return false;
+
 		return $this->getSize($attribute, $value) <= $parameters[0];
 	}
 
@@ -612,7 +655,7 @@ class Validator implements MessageProviderInterface {
 		// entire length of the string will be considered the attribute size.
 		if (is_numeric($value) and $hasNumeric)
 		{
-			return $this->data[$attribute];
+			return array_get($this->data, $attribute);
 		}
 		elseif (is_array($value))
 		{
@@ -908,7 +951,7 @@ class Validator implements MessageProviderInterface {
 	 */
 	protected function validateAlpha($attribute, $value)
 	{
-		return preg_match('/^([a-z])+$/i', $value);
+		return preg_match('/^\pL+$/u', $value);
 	}
 
 	/**
@@ -920,7 +963,7 @@ class Validator implements MessageProviderInterface {
 	 */
 	protected function validateAlphaNum($attribute, $value)
 	{
-		return preg_match('/^([a-z0-9])+$/i', $value);
+		return preg_match('/^[\pL\pN]+$/u', $value);
 	}
 
 	/**
@@ -932,7 +975,7 @@ class Validator implements MessageProviderInterface {
 	 */
 	protected function validateAlphaDash($attribute, $value)
 	{
-		return preg_match('/^([a-z0-9_-])+$/i', $value);
+		return preg_match('/^[\pL\pN_-]+$/u', $value);
 	}
 
 	/**
@@ -1550,7 +1593,7 @@ class Validator implements MessageProviderInterface {
 	/**
 	 * Register a custom validator extension.
 	 *
-	 * @param  string   $rule
+	 * @param  string  $rule
 	 * @param  Closure|string  $extension
 	 * @return void
 	 */
@@ -1602,6 +1645,19 @@ class Validator implements MessageProviderInterface {
 	public function getRules()
 	{
 		return $this->rules;
+	}
+
+	/**
+	 * Set the validation rules.
+	 *
+	 * @param  array  $rules
+	 * @return \Illuminate\Validation\Validator
+	 */
+	public function setRules(array $rules)
+	{
+		$this->rules = $this->explodeRules($rules);
+
+		return $this;
 	}
 
 	/**
@@ -1679,7 +1735,7 @@ class Validator implements MessageProviderInterface {
 	/**
 	 * Set the Translator implementation.
 	 *
-	 * @param \Symfony\Component\Translation\TranslatorInterface  $translator
+	 * @param  \Symfony\Component\Translation\TranslatorInterface  $translator
 	 * @return void
 	 */
 	public function setTranslator(TranslatorInterface $translator)
@@ -1700,7 +1756,7 @@ class Validator implements MessageProviderInterface {
 	/**
 	 * Set the custom messages for the validator
 	 *
-	 * @param array $messages
+	 * @param  array  $messages
 	 * @return void
 	 */
 	public function setCustomMessages(array $messages)

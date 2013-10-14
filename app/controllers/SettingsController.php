@@ -3,7 +3,11 @@
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cache;
 use \Setting;
+use Httpful\Request as HttpRequest;
+use Carbon\Carbon;
 
 class SettingsController extends \BaseController
 {
@@ -22,8 +26,15 @@ class SettingsController extends \BaseController
     public function index()
     {
         $settings = Setting::where('usersetting', true)->orderBy('name')->get();
+        // We'll make a web service request and cache the results on an hourly basis... saves bandwidth and speeds up performance!
+        $update_service = Cache::remember('update_checker', Config::get('turbine.updatecache'), function() {
+                            $wsresult = HttpRequest::get(Config::get('turbine.updateurl'))->send();
+                            return json_decode(json_encode(array('last_check' => Carbon::now()->format('l jS \\of F Y \\a\\t h:i:s A'), 'result' => $wsresult->body)));
+                        });
+
         return View::make('settings.index')
                         ->with('title', 'Settings')
+                        ->with('updateinfo', $update_service)
                         ->with('settings', $settings);
     }
 

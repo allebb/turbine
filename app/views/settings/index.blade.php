@@ -1,9 +1,9 @@
 @extends('layout')
 @section('content')
             <h2>Up-to-date</h2>
-            <p class="text-success">You are currently running the latest version (<strong>X</strong>) of Turbine!</p>
-            <p class="text-danger">There is an update (<strong>X</strong>) avaliable for Turbine, you're currently running version (<strong>X</strong>) we recommend that all users upgrade at their earliest convenience.</p>
-            <small>Last checked for updates at .</small>
+            <p class="text-success">You are currently running the latest version (<strong>{{ Setting::getSetting('version') }}</strong>) of Turbine!</p>
+            <p class="text-danger">There is an update (<strong>{{ $updateinfo->result->version }}</strong>) avaliable for Turbine, you're currently running version (<strong>{{ Setting::getSetting('version') }}</strong>) we recommend that all users upgrade at their earliest convenience.</p>
+            <small>Last checked for updates at {{ $updateinfo->last_check }}.</small>
             <p>&nbsp;</p>
             <h2>Application settings</h2>
             {{ Form::open(array('route' => 'settings.store', 'action' => 'POST', 'role' => 'form')) }}

@@ -5,7 +5,9 @@
     "license": "MIT",
     "require": {
         "laravel/framework": "4.0.*",
-        "ballen/executioner": "dev-master"
+        "ballen/executioner": "dev-master",
+        "nategood/httpful": "*",
+        "nesbot/carbon": "1.4.0"
     },
     "autoload": {
         "classmap": [
