@@ -21,11 +21,11 @@
 
         <a name="password"></a>
         <h2>Admin password</h2>
-        <p>You are recommended from time to time to reset your 'admin' password, this password enables you to login to Turbine as well as access the API remotely.</p>
+        <p>You are recommended that from time to time you reset your admin account '<em>{{ Auth::user()->username }}</em>' password, this password enables you to login to Turbine as well as access the API remotely.</p>
         {{ Form::open(array('url' => 'password/reset', 'action' => 'POST', 'role' => 'form')) }}
         <div class="form-group">
-            <label for="new_password">Current password</label>
-            <input type="password" class="form-control" name="current_password" id="new_password">
+            <label for="current_password">Current password</label>
+            <input type="password" class="form-control" name="current_password" id="current_password">
             <p class="help-block">To reset your password you must first provide your existing 'admin' password.</p>
         </div>
         <div class="form-group">
