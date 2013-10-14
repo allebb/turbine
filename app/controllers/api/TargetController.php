@@ -2,9 +2,10 @@
 
 namespace api;
 
-use \Response;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Response;
 use \Rule;
-use \Input;
+
 
 class TargetController extends ApiController
 {

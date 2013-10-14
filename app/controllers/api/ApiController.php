@@ -2,7 +2,7 @@
 
 namespace api;
 
-use \Response;
+use Illuminate\Support\Facades\Response;
 
 class ApiController extends \BaseController
 {

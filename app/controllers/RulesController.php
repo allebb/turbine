@@ -1,16 +1,22 @@
 <?php
 
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\View;
+use \NginxConfig;
 use \Rule;
-use \Input;
 
 class RulesController extends \BaseController
 {
 
     function __construct()
     {
-// Require that the user is logged in!
+        // Require that the user is logged in!
         $this->beforeFilter('auth.basic');
-// We want to enable CSFR protection on both the 'update', 'store' and 'destroy' actions.
+        // We want to enable CSFR protection on both the 'update', 'store' and 'destroy' actions.
         $this->beforeFilter('csrf', array('on' => array('update', 'store', 'destroy')));
     }
 
@@ -21,12 +27,12 @@ class RulesController extends \BaseController
     {
         $rules = Rule::all();
 
-// Lets load in each of the rules and get the target infomation for each..
+        // Lets load in each of the rules and get the target infomation for each..
         $combined_list = array();
         foreach ($rules as $rule) {
             $combined = array();
 
-// Now we load in each config file...
+            // Now we load in each config file...
             $reader = new NginxConfig();
             $reader->setHostheaders($rule->hostheader);
             $reader->readConfig(Setting::getSetting('nginxconfpath') . '/' . $reader->serverNameToFileName() . '.enabled.conf');
@@ -62,7 +68,7 @@ class RulesController extends \BaseController
      */
     public function store()
     {
-// we'll first validate the data before continueing...
+        // we'll first validate the data before continueing...
         $validator = Validator::make(
                         array(
                     'origin address' => Input::get('origin_address'),
@@ -80,7 +86,7 @@ class RulesController extends \BaseController
             $create_rule->enabled = Input::get('enabled');
             $create_rule->nlb = false;
             if ($create_rule->save()) {
-// We now write out the configuration file for the nginx virtual host.
+                // We now write out the configuration file for the nginx virtual host.
                 $config = new NginxConfig();
                 $config->setHostheaders($create_rule->hostheader);
                 $config->addServerToNLB(array(
@@ -115,7 +121,7 @@ class RulesController extends \BaseController
         $rule = Rule::find($id);
 
         if ($rule) {
-// Load in the current configuration
+            // Load in the current configuration
             $config = new NginxConfig();
             $config->setHostheaders($rule->hostheader);
             $config->readConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
@@ -213,19 +219,22 @@ class RulesController extends \BaseController
      */
     public function destroy($id)
     {
-// Lets delete the record from the DB..
+        // Lets delete the record from the DB..
         $delete_rule = Rule::find($id);
         if ($delete_rule) {
-// Delete the config file.
+            // Delete the config file.
             $config = new NginxConfig();
             $config->setHostheaders($delete_rule->hostheader);
             $config->readConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
             if ($config->deleteConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf')) {
-// We now delete the record from the DB...
+                // We now delete the record from the DB...
                 $delete_rule->delete();
             }
             $config->reloadConfig();
         }
+        // As this method is called using both AJAX and the FORM on the Edit page, we only want to respond simply to the AJAX request otherwise we'll get Server 500 errors in our Javascript Console!
+        if (Request::ajax())
+            return Response::make(array('deleted' => true), 200); // Request was ajax so we send a simple response instead!
         return Redirect::route('rules.index')
                         ->with('flash_success', 'The rule for ' . json_decode($config->toJSON())->server_name . ' has been deleted successfully!');
     }

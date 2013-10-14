@@ -1,7 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\View;
 use \Setting;
-use \Input;
 
 class SettingsController extends \BaseController
 {

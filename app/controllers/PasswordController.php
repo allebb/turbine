@@ -1,6 +1,11 @@
 <?php
 
-class PasswordController extends BaseController
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
+class PasswordController extends \BaseController
 {
 
     /**
