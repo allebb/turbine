@@ -19,19 +19,7 @@ Route::controller('action', 'UtilController');
  * API route grouping
  */
 Route::group(array('prefix' => 'api/v1/'), function() {
-
-            Route::resource('rule', 'api\v1\RulesController', array(
-                'only' => array(
-                    'index',
-                    'show',
-                    'store',
-                    'update',
-                    'destroy',
-            )));
-
-            Route::resource('target', 'api\v1\TargetController', array(
-                'only' => array(
-                    'store', // Creates a new target and 'associates its against an existing rule.
-                    'destroy', // Delete an existing target.
-            )));
+            // I won't specify the 'only' methods as the extending API controller will respond with an JSON request for all missingMthods()
+            Route::resource('rule', 'api\v1\RulesController');
+            Route::resource('target', 'api\v1\TargetController');
         });
