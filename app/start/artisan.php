@@ -11,3 +11,5 @@
 |
 */
 
+Artisan::add(new AdminResetCommand);
+Artisan::add(new FactoryResetCommand);
