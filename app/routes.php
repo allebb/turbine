@@ -18,9 +18,9 @@ Route::controller('action', 'UtilController');
 /**
  * API route grouping
  */
-Route::group(array('prefix' => 'api/'), function() {
+Route::group(array('prefix' => 'api/v1/'), function() {
 
-            Route::resource('rule', 'api\RulesController', array(
+            Route::resource('rule', 'api\v1\RulesController', array(
                 'only' => array(
                     'index',
                     'show',
@@ -29,7 +29,7 @@ Route::group(array('prefix' => 'api/'), function() {
                     'destroy',
             )));
 
-            Route::resource('target', 'api\TargetController', array(
+            Route::resource('target', 'api\v1\TargetController', array(
                 'only' => array(
                     'store', // Creates a new target and 'associates its against an existing rule.
                     'destroy', // Delete an existing target.

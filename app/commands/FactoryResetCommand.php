@@ -39,7 +39,11 @@ class FactoryResetCommand extends Command
     public function fire()
     {
         if ($this->confirm('Are you sure you wish to restore to factory defaults? [y/N] ', false)) {
-            // We'll execute migrations here, we'll reset and then re-migrate!
+
+            // Execute the migration tasks here, meaning that we only have to keep the migrations up to date and the rest should
+            // just work :)
+
+            Log::alert('Factory settings restored from the console.');
             $this->info('Database settings restored!');
             $this->info('Done!');
         } else {

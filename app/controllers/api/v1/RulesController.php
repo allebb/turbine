@@ -1,10 +1,11 @@
 <?php
 
-namespace api;
+namespace api\v1;
 
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 use \Rule;
+use \api\ApiController as ApiController;
 
 class RulesController extends ApiController
 {
