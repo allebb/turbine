@@ -41,18 +41,25 @@ class FactoryResetCommand extends Command
     {
         if ($this->confirm('Are you sure you wish to restore to factory defaults? [y/N] ', false)) {
 
-// Execute the migration tasks here, meaning that we only have to keep the migrations up to date and the rest should
-            // just work :)
+            /**
+             * Execute the migration tasks here, meaning that we only have to keep the migrations
+             *  up to date and the rest should just work :)
+             */
             $app_path = str_replace('/app/commands', '', dirname(__FILE__));
             $execute = new Executer;
-            $execute->setApplication('php')->addArgument($app_path . '/artisan')->addArgument('migrate:refresh')->addArgument('--seed');
-            $execute->execute();
-            foreach ($execute->resultAsArray() as $outputline) {
-                $this->info($outputline);
-            }
-
-            Log::alert('Factory settings restored from the console.');
-            $this->info('Database settings restored!');
+            $execute->setApplication('php')->addArgument($app_path . '/artisan')->addArgument('migrate:refresh')->addArgument('--seed')->execute();
+            $genkey = new Executer;
+            $genkey->setApplication('php')->addArgument($app_path . '/artisan')->addArgument('turbine:generatekey')->execute();
+            /**
+             *  Users can uncommet this code block if they want verbose factory resets!
+             *
+             * foreach ($execute->resultAsArray() as $outputline) {
+             *    $this->info($outputline); - Users can uncommet this if they want verbose factory resets!
+             * }
+             *
+             */
+            Log::alert('Factory settings restored from the console');
+            $this->info('Factory settings restored and a new API key has been generated!');
         } else {
             $this->error('User cancelled!');
         }
