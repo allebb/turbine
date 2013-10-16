@@ -4,8 +4,10 @@ namespace api\v1;
 
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
-use \Rule;
 use \api\ApiController as ApiController;
+use \Rule;
+use \NginxConfig;
+use \Setting;
 
 class RulesController extends ApiController
 {
@@ -22,10 +24,36 @@ class RulesController extends ApiController
      */
     public function index()
     {
-        $all_rules = Rule::all();
+
+        $rules = Rule::all();
+
+        // Lets load in each of the rules and get the target infomation for each..
+        $combined_list = array();
+        foreach ($rules as $rule) {
+            $combined = array();
+
+            // Now we load in each config file...
+            $reader = new NginxConfig();
+            $reader->setHostheaders($rule->hostheader);
+            $reader->readConfig(Setting::getSetting('nginxconfpath') . '/' . $reader->serverNameToFileName() . '.enabled.conf');
+            $targets = $reader->writeConfig()->toJSON();
+            $combined['hostheader'] = $rule->hostheader;
+            $target_array = json_decode($targets, true);
+            $target_string = '';
+            $total_hosts = 0;
+            $combined['id'] = $rule->id;
+            $combined['targets'] = $target_array['nlb_servers'];
+            $combined['enabled'] = true;
+            if ($total_hosts > 1) {
+                $combined['nlb'] = true;
+            } else {
+                $combined['nlb'] = false;
+            }
+            $combined_list[] = $combined;
+        }
         return Response::json(array(
                     'error' => false,
-                    'rules' => $all_rules->toArray()
+                    'rules' => $combined_list
                         ), 200);
     }
 

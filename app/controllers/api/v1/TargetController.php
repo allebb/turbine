@@ -3,13 +3,12 @@
 namespace api\v1;
 
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
-use \Rule;
 use \api\ApiController as ApiController;
 use Illuminate\Support\Facades\Validator;
 use \NginxConfig;
 use \Setting;
+use \Rule;
 
 class TargetController extends ApiController
 {
