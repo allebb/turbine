@@ -25,9 +25,7 @@ class RulesController extends ApiController
      */
     public function index()
     {
-
         $rules = Rule::all();
-
         // Lets load in each of the rules and get the target infomation for each..
         $combined_list = array();
         foreach ($rules as $rule) {
@@ -66,11 +64,31 @@ class RulesController extends ApiController
     public function show($id)
     {
         $rule = Rule::find($id);
-        if ($rule)
+        if ($rule) {
+            $combined_list = array();
+            $combined = array();
+            $reader = new NginxConfig();
+            $reader->setHostheaders($rule->hostheader);
+            $reader->readConfig(Setting::getSetting('nginxconfpath') . '/' . $reader->serverNameToFileName() . '.enabled.conf');
+            $targets = $reader->writeConfig()->toJSON();
+            $combined['hostheader'] = $rule->hostheader;
+            $target_array = json_decode($targets, true);
+            $total_hosts = count($target_array['nlb_servers']);
+            $combined['id'] = $rule->id;
+            $combined['targets'] = $target_array['nlb_servers'];
+            $combined['enabled'] = true;
+            if ($total_hosts > 1) {
+                $combined['nlb'] = true;
+            } else {
+                $combined['nlb'] = false;
+            }
+            $combined_list[] = $combined;
+
             return Response::json(array(
                         'error' => false,
-                        'rule' => $rule->toArray()
+                        'rule' => $combined_list
                             ), 200);
+        }
         return Response::json(array(
                     'error' => true,
                     'message' => 'The requested rule does not exist.'
@@ -173,5 +191,4 @@ class RulesController extends ApiController
     }
 
 }
-
 ?>
