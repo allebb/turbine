@@ -4,7 +4,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class FactoryResetCommand extends Command
+class GenerateKey extends Command
 {
 
     /**
@@ -12,14 +12,14 @@ class FactoryResetCommand extends Command
      *
      * @var string
      */
-    protected $name = 'turbine:factoryreset';
+    protected $name = 'turbine:generatekey';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Restores the local DB back to default settings';
+    protected $description = 'Generates and sets a new API key';
 
     /**
      * Create a new command instance.
@@ -38,16 +38,12 @@ class FactoryResetCommand extends Command
      */
     public function fire()
     {
-        if ($this->confirm('Are you sure you wish to restore to factory defaults? [y/N] ', false)) {
-
-            // Execute the migration tasks here, meaning that we only have to keep the migrations up to date and the rest should
-            // just work :)
-
-            Log::alert('Factory settings restored from the console.');
-            $this->info('Database settings restored!');
-            $this->info('Done!');
+        $keyset = Setting::where('name', 'api_key')->first();
+        $keyset->svalue = md5(microtime());
+        if ($keyset->save()) {
+            $this->info('New API key was generated and set!');
         } else {
-            $this->error('User cancelled!');
+            $this->error('Unable to save new key, please try again!');
         }
     }
 
@@ -59,7 +55,7 @@ class FactoryResetCommand extends Command
     protected function getArguments()
     {
         return array(
-                //array('example', InputArgument::REQUIRED, 'An example argument.'),
+                //	array('example', InputArgument::REQUIRED, 'An example argument.'),
         );
     }
 
@@ -71,7 +67,7 @@ class FactoryResetCommand extends Command
     protected function getOptions()
     {
         return array(
-                //rearray('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
+                //	array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
         );
     }
 

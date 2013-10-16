@@ -21,7 +21,7 @@ class AdminResetCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Restores the default \'admin\' account and password.';
+    protected $description = 'Restores the default \'admin\' account and password';
 
     /**
      * Create a new command instance.
