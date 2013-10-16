@@ -4,6 +4,7 @@ namespace api\v1;
 
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 use \api\ApiController as ApiController;
 use \Rule;
 use \NginxConfig;
@@ -82,17 +83,52 @@ class RulesController extends ApiController
      */
     public final function store()
     {
-        $validator = Rule::validate(Input::all());
+        // we'll first validate the data before continueing...
+        $validator = Validator::make(
+                        array(
+                    'origin' => Input::get('origin'),
+                    'target' => Input::get('target'),
+                        )
+                        , array(
+                    'origin' => array('required', 'unique:rules,hostheader'),
+                    'target' => array('required'),
+                        )
+        );
+
         if ($validator->passes()) {
+            $create_rule = new Rule;
+            $create_rule->hostheader = strtolower(Input::get('origin'));
+            $create_rule->enabled = true;
+            $create_rule->nlb = false;
+            if ($create_rule->save()) {
+                // We now write out the configuration file for the nginx virtual host.
+                $config = new NginxConfig();
+                $config->setHostheaders($create_rule->hostheader);
+                $config->addServerToNLB(array(
+                    strtolower(Input::get('target')),
+                    array(
+                        'weight' => 1,
+                        'max_fails' => Setting::getSetting('maxfails'),
+                        'fail_timeout' => Setting::getSetting('failtimeout'),
+                    )
+                ));
+                $config->writeConfig();
+                $config->toFile(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
+                $config->reloadConfig();
+                return Response::json(array(
+                            'error' => false,
+                            'message' => 'Rule created',
+                                ), 201);
+            }
             return Response::json(array(
-                        'error' => false,
-                        'message' => 'Rule created',
-                            ), 201);
+                        'error' => true,
+                        'message' => 'The rule could not be created, please contact the server admin!'
+                            ), 500);
         } else {
             return Response::json(array(
                         'error' => true,
                         'message' => $validator->messages()->all()
-                            ), 500);
+                            ), 400);
         }
     }
 
