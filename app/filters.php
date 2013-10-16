@@ -42,11 +42,6 @@ Route::filter('auth.basic', function() {
             return Auth::basic('username');
         });
 
-// I've basically cloned the above 'BASIC AUTH' filter! - Using onceBasic() instead though so not to set an auth cookie, much better for APIs!
-Route::filter('auth.api', function() {
-            return Auth::onceBasic('username');
-        }); #
-
 
 
 /*
@@ -80,4 +75,13 @@ Route::filter('csrf', function() {
             if (Session::token() != Input::get('_token')) {
                 throw new Illuminate\Session\TokenMismatchException;
             }
+        });
+
+/**
+ * Custom API auth filter for Turbine, requests that the username and the API key is honored by the
+ * application and also that the API is in 'enabled' mode before actually responding to any API requests.
+ */
+Route::filter('auth.api', function() {
+            if (Setting::getSetting('api_enabled') != 'true')
+                return Response::json(array('error' => true, 'message' => 'API is in disabled mode'), 401);
         });

@@ -13,6 +13,7 @@ use \Rule;
 class TargetController extends ApiController
 {
 
+    // Will requrire that the API authenticiation is reqired!
     public function __construct()
     {
         parent::__construct();
