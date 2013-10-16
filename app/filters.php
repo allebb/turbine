@@ -84,4 +84,17 @@ Route::filter('csrf', function() {
 Route::filter('auth.api', function() {
             if (Setting::getSetting('api_enabled') != 'true')
                 return Response::json(array('error' => true, 'message' => 'API is in disabled mode'), 401);
+
+            // Now we need to make an authentication request using the API key from the settings table.
+            if (!Request::getUser() || !Request::getPassword()) {
+                return Response::json(array('error' => true, 'message' => 'A valid API user and key is required'), 401);
+            }
+            $user = User::where('username', '=', Request::getUser())->first();
+            // If NOT user and the API key doesn't match in the Settings table....
+            // Can also use Request::getUser(); to get the HTTP Basic provided username too if required!
+            if ($user && (Setting::getSetting('api_key') == Request::getPassword())) {
+                Auth::login($user);
+            } else {
+                return Response::json(array('error' => true, 'message' => 'Invalid credentials'), 401);
+            }
         });
