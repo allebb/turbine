@@ -18,8 +18,8 @@ class ApiController extends \BaseController
     {
         return Response::json(array(
                     'error' => true,
-                    'message' => 'Invalid API request!'
-                        ), 400);
+                    'message' => 'Invalid API request'
+                        ), 405);
     }
 
 }
