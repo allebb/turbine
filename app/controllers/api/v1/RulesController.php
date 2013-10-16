@@ -150,12 +150,26 @@ class RulesController extends ApiController
      * @param int $id The database ID of the rule to be deleted.
      * @return Response
      */
-    public function destory($id)
+    public function destroy($id)
     {
+        $delete_rule = Rule::find($id);
+        if ($delete_rule) {
+            $config = new NginxConfig();
+            $config->setHostheaders($delete_rule->hostheader);
+            $config->readConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
+            if ($config->deleteConfig(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf')) {
+                $delete_rule->delete();
+            }
+            $config->reloadConfig();
+            return Response::json(array(
+                        'error' => false,
+                        'message' => 'Rule deleted'
+                            ), 200);
+        }
         return Response::json(array(
                     'error' => false,
-                    'message' => 'Rule deleted'
-                        ), 200);
+                    'message' => 'Requested rule does not exist.'
+                        ), 404);
     }
 
 }
