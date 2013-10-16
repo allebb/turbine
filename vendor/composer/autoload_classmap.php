@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddAdvancedSettingFieldTypes' => $baseDir . '/app/database/migrations/2013_10_16_205059_Add_Advanced_Setting_Field_Types.php',
+    'AdminResetCommand' => $baseDir . '/app/commands/AdminResetCommand.php',
     'Ballen\\Executioner\\Executer' => $vendorDir . '/ballen/executioner/src/Ballen/Executioner/Executer.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Carbon\\Carbon' => $vendorDir . '/nesbot/carbon/src/Carbon/Carbon.php',
@@ -297,6 +299,7 @@ return array(
     'Doctrine\\DBAL\\Types\\Type' => $vendorDir . '/doctrine/dbal/lib/Doctrine/DBAL/Types/Type.php',
     'Doctrine\\DBAL\\Types\\VarDateTimeType' => $vendorDir . '/doctrine/dbal/lib/Doctrine/DBAL/Types/VarDateTimeType.php',
     'Doctrine\\DBAL\\Version' => $vendorDir . '/doctrine/dbal/lib/Doctrine/DBAL/Version.php',
+    'FactoryResetCommand' => $baseDir . '/app/commands/FactoryResetCommand.php',
     'Httpful\\Bootstrap' => $vendorDir . '/nategood/httpful/src/Httpful/Bootstrap.php',
     'Httpful\\Exception\\ConnectionErrorException' => $vendorDir . '/nategood/httpful/src/Httpful/Exception/ConnectionErrorException.php',
     'Httpful\\Handlers\\CsvHandler' => $vendorDir . '/nategood/httpful/src/Httpful/Handlers/CsvHandler.php',
@@ -1597,6 +1600,6 @@ return array(
     'Whoops\\Provider\\Zend\\RouteNotFoundStrategy' => $vendorDir . '/filp/whoops/src/Whoops/Provider/Zend/RouteNotFoundStrategy.php',
     'Whoops\\Run' => $vendorDir . '/filp/whoops/src/Whoops/Run.php',
     'api\\ApiController' => $baseDir . '/app/controllers/api/ApiController.php',
-    'api\\RulesController' => $baseDir . '/app/controllers/api/RulesController.php',
-    'api\\TargetController' => $baseDir . '/app/controllers/api/TargetController.php',
+    'api\\v1\\RulesController' => $baseDir . '/app/controllers/api/v1/RulesController.php',
+    'api\\v1\\TargetController' => $baseDir . '/app/controllers/api/v1/TargetController.php',
 );

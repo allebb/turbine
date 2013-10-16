@@ -8,8 +8,21 @@
 @foreach($settings as $setting)
 <div class="form-group">
     <label for="{{ $setting->name }}">{{{ $setting->friendlyname }}}</label>
+    @if($setting->type == 'textbox')
     <input type="text" class="form-control" name="{{ $setting->name }}" id="{{ $setting->name }}" placeholder="eg. www.mydomain.com or *.mydomain.com"@if($setting->svalue) value="{{{ $setting->svalue }}}"@endif>
-           <p class="help-block">{{{ $setting->description }}}</p>
+    @endif
+    @if($setting->type == 'dropdown')
+    <select name="{{ $setting->name }}"  class="form-control">
+    @foreach(explode('|', $setting->options) as $option)
+    @if($option == $setting->svalue)
+        <option value="{{ $option }}" selected>{{ $option }}</option>
+    @else
+        <option value="{{ $option }}">{{ $option }}</option>
+    @endif
+    @endforeach
+    </select>
+    @endif
+    <p class="help-block">{{{ $setting->description }}}</p>
 </div>
 @endforeach
 <!-- End of options -->

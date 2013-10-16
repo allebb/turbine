@@ -9,7 +9,7 @@ class SettingsTableSeeder extends Illuminate\Database\Seeder
         // Version of Turbine Appliance software.
         $setting = new Setting(array(
             'name' => 'version',
-            'svalue' => '0.1 alpha',
+            'svalue' => '1.0.0',
             'friendlyname' => 'Application version',
             'description' => 'Stores the current software version of the Turbine application.',
             'usersetting' => false,
@@ -53,6 +53,8 @@ class SettingsTableSeeder extends Illuminate\Database\Seeder
             'friendlyname' => 'API remote access ',
             'description' => 'Allow remote access to the Turbine RESTful API to add and ammend rules via. third-party applications.',
             'usersetting' => true,
+            'type' => 'dropdown',
+            'options' => 'false|true'
         ));
         $setting->save();
 
