@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Ballen\Executioner\Executer;
 
 class FactoryResetCommand extends Command
 {
@@ -40,12 +41,18 @@ class FactoryResetCommand extends Command
     {
         if ($this->confirm('Are you sure you wish to restore to factory defaults? [y/N] ', false)) {
 
-            // Execute the migration tasks here, meaning that we only have to keep the migrations up to date and the rest should
+// Execute the migration tasks here, meaning that we only have to keep the migrations up to date and the rest should
             // just work :)
+            $app_path = str_replace('/app/commands', '', dirname(__FILE__));
+            $execute = new Executer;
+            $execute->setApplication('php')->addArgument($app_path . '/artisan')->addArgument('migrate:refresh')->addArgument('--seed');
+            $execute->execute();
+            foreach ($execute->resultAsArray() as $outputline) {
+                $this->info($outputline);
+            }
 
             Log::alert('Factory settings restored from the console.');
             $this->info('Database settings restored!');
-            $this->info('Done!');
         } else {
             $this->error('User cancelled!');
         }

@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
         $this->call('SettingsTableSeeder');
         $this->command->info('Settings table seeded!');
 
-        $this->call('RulesTableSeeder');
-        $this->command->info('Rules table seeded!');
+        //$this->call('RulesTableSeeder');
+        //$this->command->info('Rules table seeded!');
     }
 
 }
