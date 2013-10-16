@@ -157,10 +157,64 @@ class RulesController extends ApiController
      */
     public function update($id)
     {
-        return Response::json(array(
-                    'error' => false,
-                    'message' => 'Rule updated'
-                        ), 200);
+        $validator = Validator::make(
+                        array(
+                    'origin' => Input::get('origin'),
+                        )
+                        , array(
+                    'origin' => array('required'),
+                        )
+        );
+
+        if ($validator->passes()) {
+            $update_rule = Rule::find($id);
+            if ($update_rule) {
+
+                // We need to check if the origin address has changed and if so rename (move)
+                // the configuration file first and then proceed to save the changes!
+                if (strtolower(Input::get('origin')) != $update_rule->hostheader) {
+                    $config_object = new NginxConfig();
+                    $new_config_object = new NginxConfig();
+                    $config_file = Setting::getSetting('nginxconfpath') . '/' . $config_object->setHostheaders(strtolower(Input::get('origin')))->serverNameToFileName() . '.enabled.conf';
+                    rename(Setting::getSetting('nginxconfpath') . '/' . $new_config_object->setHostheaders(strtolower($update_rule->hostheader))->serverNameToFileName() . '.enabled.conf', $config_file);
+                } else {
+                    $config_object = new NginxConfig();
+                    $config_file = Setting::getSetting('nginxconfpath') . '/' . $config_object->setHostheaders(strtolower($update_rule->hostheader))->serverNameToFileName() . '.enabled.conf';
+                }
+
+                // We now laod in the configuration file.
+                $existing_config = new NginxConfig();
+                $existing_config->setHostheaders($update_rule->hostheader);
+                $existing_config->readConfig($config_file);
+                $targets = json_decode($existing_config->writeConfig()->toJSON());
+                $no_targets = count($targets->nlb_servers);
+                $update_rule->hostheader = strtolower(Input::get('origin'));
+                //$update_rule->enabled = Input::get('enabled'); - Will add this as a feature in later versions of the software!
+                if ($update_rule->save()) {
+                    $existing_config->writeConfig()->toFile(Setting::getSetting('nginxconfpath') . '/' . $existing_config->serverNameToFileName() . '.enabled.conf');
+                }
+                if ($no_targets > 1) {
+                    // We now update record to indicate that it is a NLB setup if there are more than one target associated to the rule!
+                    $update_rule->nlb = true;
+                    $update_rule->save();
+                }
+                // We now reload the configuration file to ensure changes take immediate affect.
+                $existing_config->reloadConfig();
+                return Response::json(array(
+                            'error' => false,
+                            'message' => 'Rule updated'
+                                ), 200);
+            }
+            return Response::json(array(
+                        'error' => false,
+                        'message' => 'Requested rule does not exist.'
+                            ), 404);
+        } else {
+            return Response::json(array(
+                        'error' => false,
+                        'message' => $validator->messages()->all()
+                            ), 400);
+        }
     }
 
     /**
