@@ -75,6 +75,10 @@ chmod -R 777 /etc/turbine/configs
 chmod 777 /etc/turbine/webapp/app/database
 chmod 777 /etc/turbine/webapp/app/database/production.sqlite
 
+# We now register the turbineutil tool (an interface to PHP artisan in /usr/bin)
+chmod +x /etc/turbine/webapp/scripts/bin/turbinecli.sh
+ln -s /etc/turbine/webapp/scripts/bin/turbinecli.sh /usr/bin/turbinecli
+
 # We'll now add a new account for Nginx to run under and will also add that user to the sudoers list (as I can't think of a more secure way to do it at present)
 echo 'Adding Nginx user to sudoers...'
 echo "$NGINX_USER ALL=NOPASSWD: /usr/bin/service nginx reload" > /etc/sudoers.d/turbine
@@ -94,6 +98,13 @@ echo "Starting Turbine (nginx deamon)..."
 /etc/init.d/php5-fpm restart
 /etc/init.d/nginx restart
 
+# We now run the database refresh and reset of all default data (artisan migrate:refresh --seed)
+echo "Running local DB migrations..."
+/usr/bin/turbinecli factoryreset
+
+# We generate a new random API key for this installation.
+echo "Generating new API key..."
+/usr/bin/turbinecli generatekey
 
 echo -e "Installation complete!\n"
 echo -e "You should now be able to login and administer Turbine using the following"
