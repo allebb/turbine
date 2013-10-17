@@ -54,13 +54,13 @@
                         <input type="text" class="form-control" name="target" id="target" placeholder="eg. backend.example.com or 192.168.0.3:8080">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="maxfails" id="maxfails" placeholder="eg. {{ Setting::getSetting('maxfails') }}">
+                        <input type="text" class="form-control" name="maxfails" id="maxfails" placeholder="eg. {{ Setting::getSetting('node_maxfails') }}">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="failtimeout" id="failtimeout" placeholder="eg. {{ Setting::getSetting('failtimeout') }}">
+                        <input type="text" class="form-control" name="failtimeout" id="failtimeout" placeholder="eg. {{ Setting::getSetting('node_failtimeout') }}">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="weight" id="weight" placeholder="eg. {{ Setting::getSetting('weight') }} ">
+                        <input type="text" class="form-control" name="weight" id="weight" placeholder="eg. {{ Setting::getSetting('node_weight') }} ">
                     </td>
                     <td>
                         {{ Form::submit('Add target', array('class' => 'btn btn-primary')) }}

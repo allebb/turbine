@@ -85,7 +85,7 @@ class RulesController extends \BaseController
             $create_rule->hostheader = strtolower(Input::get('origin_address'));
             $create_rule->enabled = Input::get('enabled');
             $create_rule->nlb = false;
-            if ($create_rule->save() && file_exists(Setting::getSetting('nginxconfpath'))) {
+            if ($create_rule->save() && is_dir(Setting::getSetting('nginxconfpath') . '/')) {
                 // We now write out the configuration file for the nginx virtual host.
                 $config = new NginxConfig();
                 $config->setHostheaders($create_rule->hostheader);
@@ -101,7 +101,7 @@ class RulesController extends \BaseController
                 $config->toFile(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
                 $config->reloadConfig();
                 return Redirect::back()
-                            ->with('flash_success', 'The rule for ' . $create_rule->hostheader . ' has been added successfully!');
+                                ->with('flash_success', 'The rule for ' . $create_rule->hostheader . ' has been added successfully!');
             }
             $create_rule->delete(); // We need to delete the rule if the rule config couldn't be created!
             return Redirect::back()

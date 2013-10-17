@@ -117,7 +117,7 @@ class RulesController extends ApiController
             $create_rule->hostheader = strtolower(Input::get('origin'));
             $create_rule->enabled = true;
             $create_rule->nlb = false;
-            if ($create_rule->save() && file_exists(Setting::getSetting('nginxconfpath'))) {
+            if ($create_rule->save() && is_dir(Setting::getSetting('nginxconfpath').'/')) {
                 // We now write out the configuration file for the nginx virtual host.
                 $config = new NginxConfig();
                 $config->setHostheaders($create_rule->hostheader);
