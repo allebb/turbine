@@ -5,7 +5,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="{{ URL::asset('favicon.ico') }}">
     <title>{{{ $title }}} - Turbine (v.{{{ $turbineversion }}})</title>
-    <link href="{{ URL::asset('css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('css/bootstrap-theme.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('css/theme.css') }}" rel="stylesheet">
 
