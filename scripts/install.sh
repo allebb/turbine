@@ -73,7 +73,7 @@ mv /etc/turbine/configs/common/turbine_default.enabled.conf /etc/turbine/configs
 chmod -R 777 /etc/turbine/webapp/app/storage
 chmod -R 777 /etc/turbine/configs
 chmod 777 /etc/turbine/webapp/app/database
-chmod 777 /etc/turbine/webapp/app/database/production.sqlite
+chmod 777 /etc/turbine/webapp/app/database/turbine.sqlite
 
 # We now register the turbineutil tool (an interface to PHP artisan in /usr/bin)
 chmod +x /etc/turbine/webapp/scripts/bin/turbinecli.sh
