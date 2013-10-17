@@ -38,7 +38,6 @@ class RulesController extends ApiController
             $targets = $reader->writeConfig()->toJSON();
             $combined['hostheader'] = $rule->hostheader;
             $target_array = json_decode($targets, true);
-            $target_string = '';
             $total_hosts = 0;
             $combined['id'] = $rule->id;
             $combined['targets'] = $target_array['nlb_servers'];
