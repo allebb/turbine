@@ -4,6 +4,8 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Ballen\Executioner\Executer;
+use \Setting;
+use \Rule;
 
 class FactoryResetCommand extends Command
 {
@@ -46,10 +48,28 @@ class FactoryResetCommand extends Command
              *  up to date and the rest should just work :)
              */
             $app_path = str_replace('/app/commands', '', dirname(__FILE__));
+
+            // We now need to delete all configuration files from the Nginx configuration directory
+            $cleanup = new NginxConfig;
+
+            $existing_rules = Rule::all();
+            foreach ($existing_rules as $rule) {
+                //$cleanup->readConfig($filename)
+                $cleanup->setHostheaders($rule->hostheader);
+                $cleanup->deleteConfig(Setting::getSetting('nginxconfpath') . '/' . $cleanup->serverNameToFileName() . '.enabled.conf');
+            }
+
+            // We now re-build the database using the migrations...
             $execute = new Executer;
             $execute->setApplication('php')->addArgument($app_path . '/artisan')->addArgument('migrate:refresh')->addArgument('--seed')->execute();
+
+            // and then restart the daemon as otherwise Nginx will continue to proxy traffic...
+            $cleanup->reloadConfig();
+
+            // We now generate a new API key..
             $genkey = new Executer;
             $genkey->setApplication('php')->addArgument($app_path . '/artisan')->addArgument('turbine:generatekey')->execute();
+
             /**
              *  Users can uncommet this code block if they want verbose factory resets!
              *
