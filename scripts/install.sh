@@ -43,7 +43,7 @@ fi
 # We now install the main packages required by the Turbine software.
 echo "Installing required packages..."
 apt-get update
-apt-get -y install nginx php5-fpm php5-curl php5-json php5-sqlite php5-mcrypt
+apt-get -y install nginx php5-fpm php5-curl php5-json php5-sqlite php5-mcrypt php5-cli
 
 echo "Configuring Nginx..."
 # We now need to make some changes to the default nginx.conf file...
@@ -93,11 +93,6 @@ chmod 0440 /etc/sudoers.d/turbine
 # Not sure if we need to restart the sudo service for the changes to take effect so I'll keep this here for now.
 /etc/init.d/sudo force-reload
 
-# We now start Nginx!
-echo "Starting Turbine (nginx deamon)..."
-/etc/init.d/php5-fpm restart
-/etc/init.d/nginx restart
-
 # We now run the database refresh and reset of all default data (artisan migrate:refresh --seed)
 echo "Running local DB migrations..."
 /usr/bin/turbinecli factoryreset
@@ -105,6 +100,10 @@ echo "Running local DB migrations..."
 # We generate a new random API key for this installation.
 echo "Generating new API key..."
 /usr/bin/turbinecli generatekey
+
+# We now start Nginx!
+echo "Starting Turbine..."
+/usr/bin/turbinecli start
 
 echo -e "Installation complete!\n"
 echo -e "You should now be able to login and administer Turbine using the following"

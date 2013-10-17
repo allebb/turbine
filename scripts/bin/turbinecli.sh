@@ -66,5 +66,6 @@ case "$1" in
             ;;
         *)
             display_help $1
-exit 1
+            exit 1
+esac
 

@@ -49,7 +49,7 @@ class SettingsTableSeeder extends Illuminate\Database\Seeder
         // Path to the root of where the Nginx configs are save too.
         $setting = new Setting(array(
             'name' => 'nginxconfpath',
-            'svalue' => '/etc/turbine/confs',
+            'svalue' => '/etc/turbine/configs',
             'friendlyname' => 'Proxy configuration path',
             'description' => 'The root path to where the Nginx virtual host configurations are stored. (No trailing slash)',
             'usersetting' => true,
