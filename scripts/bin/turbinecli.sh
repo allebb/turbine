@@ -34,26 +34,26 @@ function execute_artisan_cmd() {
 # Lets work out what we need to do!
 case "$1" in
         start)
-            service php5-fpm start
-            service nginx start
+            /etc/init.d/php5-fpm start
+            /etc/init.d/nginx start
             ;;
 
         stop)
-            service php5-fpm stop
-            service nginx stop
+            /etc/init.d/php5-fpm stop
+            /etc/init.d/nginx stop
             ;;
 
         status)
-            service nginx status
-            service php5-fpm status
+            /etc/init.d/nginx status
+            /etc/init.d/php5-fpm status
             ;;
         restart)
-            service php5-fpm restart
-            service nginx restart
+            /etc/init.d/php5-fpm restart
+            /etc/init.d/nginx restart
             ;;
         reload)
-            service php5-fpm reload
-            service nginx reload
+            /etc/init.d/php5-fpm reload
+            /etc/init.d/nginx reload
             ;;
         factoryreset)
             execute_artisan_cmd $1

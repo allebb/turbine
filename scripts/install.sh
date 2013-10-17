@@ -93,17 +93,13 @@ chmod 0440 /etc/sudoers.d/turbine
 # Not sure if we need to restart the sudo service for the changes to take effect so I'll keep this here for now.
 /etc/init.d/sudo force-reload
 
-# We now run the database refresh and reset of all default data (artisan migrate:refresh --seed)
-echo "Running local DB migrations..."
-/usr/bin/turbinecli factoryreset
+# We now start Nginx!
+echo "Starting Turbine (nginx deamon)..."
+/usr/bin/turbinecli restart
 
 # We generate a new random API key for this installation.
 echo "Generating new API key..."
 /usr/bin/turbinecli generatekey
-
-# We now start Nginx!
-echo "Starting Turbine..."
-/usr/bin/turbinecli start
 
 echo -e "Installation complete!\n"
 echo -e "You should now be able to login and administer Turbine using the following"
