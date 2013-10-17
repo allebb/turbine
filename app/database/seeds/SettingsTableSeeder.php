@@ -18,9 +18,9 @@ class SettingsTableSeeder extends Illuminate\Database\Seeder
 
         // Default max_fails
         $setting = new Setting(array(
-            'name' => 'maxfails',
+            'name' => 'node_maxfails',
             'svalue' => '1',
-            'friendlyname' => 'Max fails',
+            'friendlyname' => 'Default node max fails',
             'description' => 'The number of unsuccessful attempts at communicating with the backend server within the time period (assigned by parameter fail_timeout) after which it is considered inoperative. If not set, the number of attempts is one.',
             'usersetting' => true,
         ));
@@ -28,10 +28,20 @@ class SettingsTableSeeder extends Illuminate\Database\Seeder
 
         // Fail timeout (in seconds)
         $setting = new Setting(array(
-            'name' => 'failtimeout',
+            'name' => 'node_failtimeout',
             'svalue' => '30',
-            'friendlyname' => 'Fail timeout (in seconds)',
+            'friendlyname' => 'Default node fail timeout (in seconds)',
             'description' => 'The time (in seconds) during which must occur *max_fails* number of unsuccessful attempts at communication with the backend server that would cause the server to be considered inoperative, and also the time for which the server will be considered inoperative (before another attempt is made). If not set the time is 10 seconds. fail_timeout has nothing to do with upstream response time, use proxy_connect_timeout and proxy_read_timeout for controlling this.',
+            'usersetting' => true,
+        ));
+        $setting->save();
+
+        // Default node weight
+        $setting = new Setting(array(
+            'name' => 'node_weight',
+            'svalue' => '1',
+            'friendlyname' => 'Default node weight',
+            'description' => 'The default node weight of the target server.',
             'usersetting' => true,
         ));
         $setting->save();
@@ -41,7 +51,7 @@ class SettingsTableSeeder extends Illuminate\Database\Seeder
             'name' => 'nginxconfpath',
             'svalue' => '/etc/turbine/confs',
             'friendlyname' => 'Proxy configuration path',
-            'description' => 'The root path to where the Nginx virtual host configurations are stored.',
+            'description' => 'The root path to where the Nginx virtual host configurations are stored. (No trailing slash)',
             'usersetting' => true,
         ));
         $setting->save();

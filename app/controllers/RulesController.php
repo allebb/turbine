@@ -85,25 +85,27 @@ class RulesController extends \BaseController
             $create_rule->hostheader = strtolower(Input::get('origin_address'));
             $create_rule->enabled = Input::get('enabled');
             $create_rule->nlb = false;
-            if ($create_rule->save()) {
+            if ($create_rule->save() && file_exists(Setting::getSetting('nginxconfpath'))) {
                 // We now write out the configuration file for the nginx virtual host.
                 $config = new NginxConfig();
                 $config->setHostheaders($create_rule->hostheader);
                 $config->addServerToNLB(array(
                     strtolower(Input::get('target_address')),
                     array(
-                        'weight' => 1,
-                        'max_fails' => Setting::getSetting('maxfails'),
-                        'fail_timeout' => Setting::getSetting('failtimeout'),
+                        'weight' => Setting::getSetting('node_weight'),
+                        'max_fails' => Setting::getSetting('node_maxfails'),
+                        'fail_timeout' => Setting::getSetting('node_failtimeout'),
                     )
                 ));
                 $config->writeConfig();
                 $config->toFile(Setting::getSetting('nginxconfpath') . '/' . $config->serverNameToFileName() . '.enabled.conf');
                 $config->reloadConfig();
-            }
-
-            return Redirect::back()
+                return Redirect::back()
                             ->with('flash_success', 'The rule for ' . $create_rule->hostheader . ' has been added successfully!');
+            }
+            $create_rule->delete(); // We need to delete the rule if the rule config couldn't be created!
+            return Redirect::back()
+                            ->with('flash_error', 'The rule could not be created due to an issue with the local database file or incorrectly configured config directory, please contact the server admin!');
         } else {
             $errors = $validator->messages();
             return Redirect::back()

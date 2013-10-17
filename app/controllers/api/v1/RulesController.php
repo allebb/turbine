@@ -117,16 +117,16 @@ class RulesController extends ApiController
             $create_rule->hostheader = strtolower(Input::get('origin'));
             $create_rule->enabled = true;
             $create_rule->nlb = false;
-            if ($create_rule->save()) {
+            if ($create_rule->save() && file_exists(Setting::getSetting('nginxconfpath'))) {
                 // We now write out the configuration file for the nginx virtual host.
                 $config = new NginxConfig();
                 $config->setHostheaders($create_rule->hostheader);
                 $config->addServerToNLB(array(
                     strtolower(Input::get('target')),
                     array(
-                        'weight' => 1,
-                        'max_fails' => Setting::getSetting('maxfails'),
-                        'fail_timeout' => Setting::getSetting('failtimeout'),
+                        'weight' => Setting::getSetting('node_weight'),
+                        'max_fails' => Setting::getSetting('node_maxfails'),
+                        'fail_timeout' => Setting::getSetting('node_failtimeout'),
                     )
                 ));
                 $config->writeConfig();
@@ -137,6 +137,7 @@ class RulesController extends ApiController
                             'message' => 'Rule created',
                                 ), 201);
             }
+            $create_rule->delete(); // We need to delete the rule if the rule config couldn't be created!
             return Response::json(array(
                         'error' => true,
                         'message' => 'The rule could not be created, please contact the server admin!'
@@ -244,4 +245,5 @@ class RulesController extends ApiController
     }
 
 }
+
 ?>

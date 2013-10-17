@@ -60,7 +60,7 @@
                         <input type="text" class="form-control" name="failtimeout" id="failtimeout" placeholder="eg. {{ Setting::getSetting('failtimeout') }}">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="weight" id="weight" placeholder="eg. 1">
+                        <input type="text" class="form-control" name="weight" id="weight" placeholder="eg. {{ Setting::getSetting('weight') }} ">
                     </td>
                     <td>
                         {{ Form::submit('Add target', array('class' => 'btn btn-primary')) }}

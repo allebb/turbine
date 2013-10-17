@@ -25,7 +25,7 @@ class SettingsController extends \BaseController
      */
     public function index()
     {
-        $settings = Setting::where('usersetting', true)->orderBy('name')->get();
+        $settings = Setting::where('usersetting', true)->orderBy('name', 'asc')->get();
 
 
         // We'll make a web service request and cache the results on an hourly basis... saves bandwidth and speeds up performance!
