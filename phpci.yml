@@ -4,7 +4,11 @@ build_settings:
         - "vendor"
 
 test:
+    php_unit:
+       config:
+            - "phpunit.xml"
     php_mess_detector:
+         allow_failures: true
     php_code_sniffer:
         standard: "PSR2"
     php_loc:
