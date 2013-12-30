@@ -2,6 +2,10 @@ build_settings:
     verbose: false
     ignore: 
         - "vendor"
+        
+setup:
+    composer:
+        action: "install"
 
 test:
     php_unit:
