@@ -1,11 +1,13 @@
 build_settings:
     verbose: true
-    ignore: 
+    ignore:
         - "vendor"
-        
+
 setup:
     composer:
-        action: "install"
+        action: "update"
+    shell:
+        command: "php artisan migrate"
 
 test:
     php_unit:
@@ -15,4 +17,5 @@ test:
          allow_failures: true
     php_code_sniffer:
         standard: "PSR2"
+        allow_failures: true
     php_loc:
