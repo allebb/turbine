@@ -1,17 +1,18 @@
 <?php
 
-class ExampleTest extends TestCase {
+class ExampleTest extends TestCase
+{
 
-	/**
-	 * A basic functional test example.
-	 *
-	 * @return void
-	 */
-	public function testBasicExample()
-	{
-		$crawler = $this->client->request('GET', '/');
-
-		$this->assertTrue($this->client->getResponse()->isForbidden());
-	}
+    /**
+     * A basic functional test example.
+     *
+     * @return void
+     */
+    public function testBasicAuthAtLogin()
+    {
+        // We make sure that our first request requires BASIC auth.
+        $crawler = $this->client->request('GET', '/');
+        $this->assertFalse($this->client->getResponse()->isOk());
+    }
 
 }
