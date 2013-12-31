@@ -1,6 +1,6 @@
 <?php
 
-class ExampleTest extends TestCase
+class AuthTest extends TestCase
 {
 
     /**
