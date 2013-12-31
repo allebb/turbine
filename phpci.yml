@@ -7,7 +7,7 @@ setup:
     composer:
         action: "update"
     shell:
-        command: "php artisan migrate"
+        command: "php %buildpath%/artisan migrate"
 
 test:
     php_unit:
