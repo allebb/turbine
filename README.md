@@ -7,7 +7,7 @@ Installation on Ubuntu 12.04 LTS
 --------------------------------
 A very simple installation guide can be found here:
 
-[http://bobbyallen.me/turbine/]()
+http://bobbyallen.me/turbine/
 
 Instalation on Ubuntu 14.04 LTS
 -------------------------------
